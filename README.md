@@ -23,7 +23,7 @@ Zwei Dokumente + sofort nutzbare Templates, die definieren **wie** ein Team mit 
 1. **Lies** [modus-operandi.md](modus-operandi.md) und [vibe-coding-guide.md](vibe-coding-guide.md)
 2. **Kopiere** die Templates in dein Projekt-Repo:
    ```bash
-   cp templates/claude-md.md dein-projekt/CLAUDE.md
+   cp templates/CLAUDE.md dein-projekt/CLAUDE.md
    cp templates/product.md dein-projekt/docs/PRODUCT.md
    cp templates/decisions.md dein-projekt/docs/DECISIONS.md
    # Bei Team-Projekten:
@@ -45,7 +45,7 @@ kommunizieren über [Kanal], treffen uns [Rhythmus].
 
 | Template | Zweck |
 |----------|-------|
-| [claude-md.md](templates/claude-md.md) | KI-Briefing pro Projekt (< 200 Zeilen) |
+| [CLAUDE.md](templates/CLAUDE.md) | KI-Briefing pro Projekt (< 200 Zeilen) |
 | [product.md](templates/product.md) | Product Requirements Document (PRD) |
 | [decisions.md](templates/decisions.md) | Architektur-Entscheidungslog |
 | [mission.md](templates/mission.md) | Mission-Dokument pro Teammitglied |

@@ -247,7 +247,7 @@ Was haben wir entschieden?
 **Wo:** Repository-Root
 **Wer aktualisiert:** Projektleitung (selten, nur bei großen Änderungen)
 
-> Vorlage: [templates/claude-md.md](templates/claude-md.md)
+> Vorlage: [templates/CLAUDE.md](templates/CLAUDE.md)
 
 ```markdown
 # CLAUDE.md — [Projektname]
