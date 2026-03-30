@@ -7,20 +7,21 @@
 [TT.MM.JJJJ] — [Kontext zur Deadline]
 
 ## Team
-<!-- Pro Teammitglied eine Zeile. Bei Solo-Projekten entfällt dieser Abschnitt. -->
+<!-- Nur bei Team-Projekten. Bei Solo-Projekten diesen Abschnitt entfernen. -->
 → Lies docs/team/[name]-mission.md für aktuellen Status.
 
 ## Was bauen wir?
-→ Lies docs/PRODUCT.md (PRD)
+→ Lies docs/product.md (PRD)
 
 ## Tech-Stack + Standards
 → Lies docs/architecture.md
 
 ## Architektur-Entscheidungen
-→ Lies docs/DECISIONS.md
+→ Lies docs/decisions.md
 
 ## Arbeitsweise
-→ Lies docs/team/modus-operandi.md
+<!-- Solo: → Lies docs/modus-operandi.md -->
+<!-- Team: → Lies docs/team/modus-operandi.md -->
 
 ## Coding-Konventionen
 <!-- Projekt-spezifische Regeln, die Claude sofort sehen soll: -->

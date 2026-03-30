@@ -1,4 +1,4 @@
-# PRODUCT.md — [Produktname]
+# product.md — [Produktname]
 
 _Stand: [Datum]_
 

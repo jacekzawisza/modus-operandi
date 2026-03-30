@@ -1,4 +1,4 @@
-# DECISIONS.md — Architektur-Entscheidungen
+# decisions.md — Architektur-Entscheidungen
 
 _Chronologisches Log aller Architektur- und Produktentscheidungen._
 

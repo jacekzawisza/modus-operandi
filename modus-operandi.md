@@ -13,7 +13,7 @@ Dieses Dokument ist eine **universelle Vorlage**. Bei der Übernahme in ein konk
 - [ ] **Teammitglieder & Rollen** — Wer macht was? Mission-Dokumente pro Person anlegen
 - [ ] **Kommunikationskanäle** — Welche Kanäle nutzt ihr? (Slack, Discord, Telegram, etc.)
 - [ ] **Meeting-Rhythmus** — Eure konkreten Termine und Frequenzen eintragen
-- [ ] **Solo vs. Team** — Bei Solo-Projekten entfallen: Meeting-Abschnitte, Eskalationsregeln, Bot-Integration, Mission-Dokumente
+- [ ] **Solo vs. Team** — Bei Solo-Projekten entfallen: Team-Meetings, Eskalationsregeln, Bot-Integration, Mission-Dokumente. Kundenmeetings bleiben relevant.
 
 > **Tipp:** Lass Claude die Anpassung machen. Gib ihm dieses Dokument + eine kurze Projektbeschreibung und er erstellt die projektspezifische Version.
 
@@ -94,7 +94,7 @@ Datum — Was — Wer — Warum
 ### 2. Meeting-Notiz (pro Meeting)
 
 **Was:** Jedes Meeting produziert ein strukturiertes Ergebnis-Dokument.
-**Wo:** `docs/team/meetings/YYYY-MM-DD-thema.md`
+**Wo:** `docs/meetings/YYYY-MM-DD-thema.md`
 **Wer erstellt:** Wer das Meeting leitet (5 Min nach dem Meeting, nicht mehr)
 
 > Vorlage: [templates/meeting-note.md](templates/meeting-note.md)
@@ -126,7 +126,7 @@ Datum — Was — Wer — Warum
 ### 2b. Meeting-Transkripte
 
 **Was:** Vollständige Aufnahme + Transkription von Meetings als Rohmaterial.
-**Wo:** `docs/team/meetings/transcripts/YYYY-MM-DD-thema.md`
+**Wo:** `docs/meetings/transcripts/YYYY-MM-DD-thema.md`
 **Wer erstellt:** Wer das Meeting leitet (Aufnahme starten, automatisch transkribieren)
 **Tooling:** Deepgram / Whisper oder beliebiges Transkriptions-Tool
 
@@ -134,12 +134,12 @@ Datum — Was — Wer — Warum
 
 ```
 1. AUFNEHMEN → Transkript erstellen (automatisch)
-   Ablage: docs/team/meetings/transcripts/YYYY-MM-DD-thema.md
+   Ablage: docs/meetings/transcripts/YYYY-MM-DD-thema.md
 
 2. DESTILLIEREN → Meeting-Notiz aus Transkript (AI-Job)
    KI liest Transkript → erstellt strukturierte Notiz
    (Entscheidungen, Action Items, offene Fragen)
-   Ablage: docs/team/meetings/YYYY-MM-DD-thema.md
+   Ablage: docs/meetings/YYYY-MM-DD-thema.md
    Das ist das Artefakt das Claude liest und das Team nutzt
 ```
 
@@ -152,9 +152,9 @@ Action Items, Offene Fragen). Dateiname: YYYY-MM-DD-thema.md
 
 **Unterschied Intern vs. Extern:**
 
-- **Jour fixe (intern):** Transkript + Notiz ins Repo
+- **Jour fixe (intern, nur Team):** Transkript + Notiz ins Repo
 - **Arbeitstermin:** Notiz ins Repo, Transkript optional (nur bei Architektur-Entscheidungen)
-- **Kunden-/Stakeholder-Meeting:** Transkript + Notiz ins Repo (Kundenwünsche = wichtig)
+- **Kunden-/Stakeholder-Meeting (Solo + Team):** Transkript + Notiz ins Repo (Kundenwünsche = wichtig)
 - **Ad-hoc Calls:** Nur Notiz, nur wenn eine Entscheidung fiel
 
 **Warum beides (Transkript + Notiz)?**
@@ -173,7 +173,7 @@ Action Items, Offene Fragen). Dateiname: YYYY-MM-DD-thema.md
 > Vorlage: [templates/inbox.md](templates/inbox.md)
 
 **Warum?**
-Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (neue Entscheidungen → `decisions.md`, neue Aufgaben → Aufgabenplan, Feature-Anforderungen → `PRODUCT.md`). Statt direkt in diese Docs zu schreiben (Merge-Konflikt-Risiko mit laufenden Claude-Sessions), wird alles in `INBOX.md` gesammelt.
+Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (neue Entscheidungen → `decisions.md`, neue Aufgaben → Aufgabenplan, Feature-Anforderungen → `product.md`). Statt direkt in diese Docs zu schreiben (Merge-Konflikt-Risiko mit laufenden Claude-Sessions), wird alles in `INBOX.md` gesammelt.
 
 **Format:**
 ```markdown
@@ -182,8 +182,8 @@ Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (n
 ## 2026-03-26 — Jour fixe
 - [ ] decisions.md: Feature X ergänzen
 - [ ] aufgaben.md: Neue Aufgabe Y
-- [ ] PRODUCT.md: Anforderung Z dokumentieren
-→ Quelle: docs/team/meetings/2026-03-26-jourfixe.md
+- [ ] product.md: Anforderung Z dokumentieren
+→ Quelle: docs/meetings/2026-03-26-jourfixe.md
 ```
 
 **Workflow:**
@@ -201,10 +201,10 @@ Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (n
 **Wer aktualisiert:** Wer Architektur-Entscheidungen trifft
 **Wird gelesen von:** Claude (automatisch), Team-Mitglieder
 
-### 4. PRODUCT.md / PRD (pro Projekt)
+### 4. product.md / PRD (pro Projekt)
 
 **Was:** Das Product Requirements Document — definiert WAS gebaut wird und WARUM, bevor eine Zeile Code entsteht.
-**Wo:** `docs/PRODUCT.md`
+**Wo:** `docs/product.md`
 **Wer erstellt:** Projektleitung, idealerweise vor Projektstart
 **Enthält:** Problem, Zielgruppe, Kernfunktionen, Nicht-Ziele, Tech-Stack, Erfolgskriterien, User Journeys
 
@@ -214,10 +214,10 @@ Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (n
 
 **Aus dem Vibe Coding Guide:** Vor der Umsetzung das PRD von der KI challengen lassen (2-3 Runden). Die KI deckt Lücken auf.
 
-### 5. DECISIONS.md (pro Projekt)
+### 5. decisions.md (pro Projekt)
 
 **Was:** Chronologisches Log aller Architektur- und Produktentscheidungen auf Projekt-Level.
-**Wo:** `docs/DECISIONS.md`
+**Wo:** `docs/decisions.md`
 **Wer aktualisiert:** Wer die Entscheidung trifft (nach jeder Session)
 
 > Vorlage: [templates/decisions.md](templates/decisions.md)
@@ -239,7 +239,7 @@ Was haben wir entschieden?
 - Negativ / Risiken
 ```
 
-**Unterschied zu Entscheidungen im Mission-Dokument:** Mission-Doc = persönliche/aufgabenbezogene Entscheidungen ("Ich habe X so gelöst"). DECISIONS.md = Projekt-Architektur ("Wir nutzen PostgreSQL weil..."). Claude liest beides.
+**Unterschied zu Entscheidungen im Mission-Dokument:** Mission-Doc = persönliche/aufgabenbezogene Entscheidungen ("Ich habe X so gelöst"). decisions.md = Projekt-Architektur ("Wir nutzen PostgreSQL weil..."). Claude liest beides.
 
 ### 6. CLAUDE.md (pro Projekt)
 
@@ -259,19 +259,21 @@ Kurzbeschreibung in 1-2 Sätzen.
 TT.MM.JJJJ — Kontext zur Deadline.
 
 ## Team
+<!-- Nur bei Team-Projekten. Bei Solo-Projekten diesen Abschnitt entfernen. -->
 → Lies docs/team/[name]-mission.md für aktuellen Status.
 
 ## Was bauen wir?
-→ Lies docs/PRODUCT.md (PRD)
+→ Lies docs/product.md (PRD)
 
 ## Tech-Stack + Standards
 → Lies docs/architecture.md
 
 ## Architektur-Entscheidungen
-→ Lies docs/DECISIONS.md
+→ Lies docs/decisions.md
 
 ## Arbeitsweise
-→ Lies docs/team/modus-operandi.md
+→ Lies docs/modus-operandi.md              # Solo
+→ Lies docs/team/modus-operandi.md         # Team
 
 ## Coding-Konventionen
 - [Projekt-spezifische Regeln hier]
@@ -283,25 +285,49 @@ TT.MM.JJJJ — Kontext zur Deadline.
 
 ## Vollständige Dokument-Landschaft
 
+### Solo-Projekt
+
 ```
 dein-projekt/
 ├── CLAUDE.md                        # AI-Briefing (< 200 Zeilen)
 │
 ├── docs/
 │   ├── INBOX.md                     # Offene Änderungen aus Meetings
-│   ├── PRODUCT.md                   # PRD — Was und Warum
+│   ├── product.md                   # PRD — Was und Warum
 │   ├── architecture.md              # Stack, Datenmodell, Seitenstruktur
 │   ├── decisions.md                 # Architektur-Entscheidungen (chronologisch)
-│   ├── roadmap.md                   # Projekt-Phasen mit Status
+│   ├── modus-operandi.md            # Dieses Dokument (projektspezifische Version)
+│   │
+│   ├── meetings/                    # Kundenmeetings, Stakeholder-Calls
+│   │   ├── YYYY-MM-DD-*.md          # Destillierte Notizen
+│   │   └── transcripts/             # Vollständige Transkripte
+│   │       └── YYYY-MM-DD-*.md
+│   │
+│   ├── concepts/                    # Feature-Konzepte (vor Implementierung)
+│   └── audit/                       # Codebase-Audit-Berichte
+```
+
+### Team-Projekt
+
+```
+dein-projekt/
+├── CLAUDE.md                        # AI-Briefing (< 200 Zeilen)
+│
+├── docs/
+│   ├── INBOX.md                     # Offene Änderungen aus Meetings
+│   ├── product.md                   # PRD — Was und Warum
+│   ├── architecture.md              # Stack, Datenmodell, Seitenstruktur
+│   ├── decisions.md                 # Architektur-Entscheidungen (chronologisch)
+│   │
+│   ├── meetings/                    # Alle Meetings (intern + extern)
+│   │   ├── YYYY-MM-DD-*.md          # Destillierte Notizen
+│   │   └── transcripts/             # Vollständige Transkripte
+│   │       └── YYYY-MM-DD-*.md
 │   │
 │   ├── team/                        # Team-Koordination
 │   │   ├── modus-operandi.md        # Dieses Dokument (projektspezifische Version)
 │   │   ├── [name]-mission.md        # Mission-Dokument pro Person
-│   │   ├── [name]-aufgaben.md       # Detaillierter Aufgabenplan (optional)
-│   │   └── meetings/                # Meeting-Notizen
-│   │       ├── YYYY-MM-DD-*.md      # Destillierte Notizen
-│   │       └── transcripts/         # Vollständige Transkripte
-│   │           └── YYYY-MM-DD-*.md
+│   │   └── [name]-aufgaben.md       # Detaillierter Aufgabenplan (optional)
 │   │
 │   ├── concepts/                    # Feature-Konzepte (vor Implementierung)
 │   └── audit/                       # Codebase-Audit-Berichte
@@ -309,16 +335,26 @@ dein-projekt/
 
 ### Die Logik
 - **CLAUDE.md** = AI liest das zuerst → verweist auf alles andere
-- **docs/*.md** = Projekt-Artefakte → WAS bauen wir? (aus dem Vibe Coding Guide)
-- **docs/team/*.md** = Team-Artefakte → WER macht WAS? (aus dem Modus Operandi)
+- **docs/*.md** = Projekt-Artefakte → WAS bauen wir?
+- **docs/meetings/** = Kundenmeetings + Team-Meetings → WAS wurde besprochen?
+- **docs/team/*.md** = Team-Artefakte (nur bei Team-Projekten) → WER macht WAS?
 
 ---
 
 ## Wie es zusammenspielt
 
 ```
+# Solo-Projekt:
 CLAUDE.md (Einstieg)
-   ├── docs/architecture.md (WAS bauen wir?)
+   ├── docs/product.md (WAS bauen wir?)
+   ├── docs/architecture.md (WIE bauen wir es?)
+   ├── docs/modus-operandi.md (WIE arbeiten wir?)
+   └── docs/meetings/*.md (WAS wurde besprochen?)
+
+# Team-Projekt:
+CLAUDE.md (Einstieg)
+   ├── docs/product.md (WAS bauen wir?)
+   ├── docs/architecture.md (WIE bauen wir es?)
    ├── docs/team/[name]-mission.md (WER macht WAS gerade?)
    ├── docs/team/modus-operandi.md (WIE arbeiten wir?)
    └── docs/meetings/*.md (WAS wurde besprochen?)
@@ -353,7 +389,7 @@ Liest: Blocker-Sektion → das wird die Agenda
     ↓
 Meeting: Demo → Status → Blocker → Feedback → Next Week
     ↓
-Meeting-Notiz in docs/team/meetings/
+Meeting-Notiz in docs/meetings/
     ↓
 Action Items → neuer Wochenplan
 ```
@@ -396,7 +432,7 @@ Jede Coding-Session folgt dem gleichen 5-Schritt-Muster:
 
 5. SESSION ABSCHLIEßEN
    → Tests grün?
-   → DECISIONS.md aktualisiert (wenn Architektur-Entscheidung)?
+   → decisions.md aktualisiert (wenn Architektur-Entscheidung)?
    → Mission-Dokument: [x] bei erledigten Aufgaben?
    → Sauberer Commit (feat: / fix: / refactor:)?
    → Ggf. CLAUDE.md um neue Konventionen ergänzt?
@@ -416,7 +452,7 @@ Bitte lies zuerst CLAUDE.md für Projektkonventionen, dann docs/INBOX.md für of
 ```
 Bitte Session abschließen:
 1. Aktualisiere alle relevanten Dateien in docs/ mit den Änderungen dieser Session
-   (z.B. roadmap.md, architecture.md, decisions.md, PRODUCT.md, Konzepte)
+   (z.B. architecture.md, decisions.md, product.md, Konzepte)
 2. Aktualisiere Aufgaben- und Mission-Dokumente (erledigte Tasks [x], neue Tasks)
 3. Prüfe docs/INBOX.md — wenn offene Punkte existieren, arbeite sie in die
    jeweiligen Docs ein und lösche die erledigten Einträge aus INBOX.md
@@ -494,7 +530,7 @@ Ergebnis: Bericht in `docs/audit/`. Gefundene Issues werden zu Aufgaben im Woche
 ### Faustregel: Was gehört wohin?
 
 - **Flüchtig** (Frage, Blocker, "bin fertig für heute") → **Team-Kanal**
-- **Dauerhaft** (Entscheidung, Status-Update, Architektur) → **Git** (Mission-Doc, DECISIONS.md)
+- **Dauerhaft** (Entscheidung, Status-Update, Architektur) → **Git** (Mission-Doc, decisions.md)
 - **Privat** (Strategie, Finanzen, Feedback über Personen) → **Privater Kanal**
 
 ### Bot-Integration (optional)
@@ -544,7 +580,7 @@ Ein Projekt-Bot im Team-Kanal kann als **Kommunikations-Hub** dienen — kein zw
 |--------|--------------------------|--------------------------|
 | Status-Update | Mündlich im Meeting | Mission-Dokument im Git |
 | Aufgaben-Tracking | Notion-Board (überquillt) | Checkboxen in Markdown (im Repo) |
-| Meeting-Ergebnisse | Im Kopf / Notion irgendwo | `docs/team/meetings/YYYY-MM-DD.md` |
+| Meeting-Ergebnisse | Im Kopf / Notion irgendwo | `docs/meetings/YYYY-MM-DD.md` |
 | Entscheidungen | "Hatten wir das nicht besprochen?" | Entscheidungs-Log in Mission-Docs |
 | AI-Kontext | Claude startet blind | CLAUDE.md → Mission → Architecture → volles Bild |
 | Wochenbericht | Manuell erzählen | Git-History + Mission-Dokument = automatisch |
@@ -554,11 +590,23 @@ Ein Projekt-Bot im Team-Kanal kann als **Kommunikations-Hub** dienen — kein zw
 
 ## Quick-Start (Tag 1)
 
-1. `CLAUDE.md` im Repo-Root erstellen (Vorlage: [templates/claude-md.md](templates/claude-md.md))
-2. `docs/team/[name]-mission.md` erstellen (Vorlage: [templates/mission.md](templates/mission.md))
-3. `docs/team/meetings/` Ordner erstellen
-4. Dem Teammitglied erklären: "Das ist dein Dokument. Du aktualisierst es. Claude liest es."
-5. Erste Meeting-Notiz beim nächsten Jour fixe erstellen
+### Solo-Projekt
+
+1. `CLAUDE.md` im Repo-Root erstellen (Vorlage: [templates/CLAUDE.md](templates/CLAUDE.md))
+2. `docs/product.md` erstellen (Vorlage: [templates/product.md](templates/product.md))
+3. `docs/decisions.md` erstellen (Vorlage: [templates/decisions.md](templates/decisions.md))
+4. `docs/meetings/` Ordner erstellen (für Kundenmeetings)
+5. `docs/modus-operandi.md` — projektspezifische Version dieses Dokuments
+
+### Team-Projekt
+
+1. `CLAUDE.md` im Repo-Root erstellen (Vorlage: [templates/CLAUDE.md](templates/CLAUDE.md))
+2. `docs/product.md` erstellen (Vorlage: [templates/product.md](templates/product.md))
+3. `docs/decisions.md` erstellen (Vorlage: [templates/decisions.md](templates/decisions.md))
+4. `docs/meetings/` Ordner erstellen
+5. `docs/team/[name]-mission.md` erstellen (Vorlage: [templates/mission.md](templates/mission.md))
+6. `docs/team/modus-operandi.md` — projektspezifische Version dieses Dokuments
+7. Dem Teammitglied erklären: "Das ist dein Dokument. Du aktualisierst es. Claude liest es."
 
 **Zeitaufwand pro Tag für Teammitglieder:** ~5-10 Minuten (Status aktualisieren, [x] setzen, Blocker notieren)
 **Zeitaufwand pro Woche für Projektleitung:** ~15 Minuten (Meetings + Status scannen)

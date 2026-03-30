@@ -22,16 +22,27 @@ Zwei Dokumente + sofort nutzbare Templates, die definieren **wie** ein Team mit 
 
 1. **Lies** [modus-operandi.md](modus-operandi.md) und [vibe-coding-guide.md](vibe-coding-guide.md)
 2. **Kopiere** die Templates in dein Projekt-Repo:
+
+   **Solo-Projekt:**
    ```bash
    cp templates/CLAUDE.md dein-projekt/CLAUDE.md
-   cp templates/product.md dein-projekt/docs/PRODUCT.md
-   cp templates/decisions.md dein-projekt/docs/DECISIONS.md
-   # Bei Team-Projekten:
-   cp templates/mission.md dein-projekt/docs/team/[name]-mission.md
+   cp templates/product.md dein-projekt/docs/product.md
+   cp templates/decisions.md dein-projekt/docs/decisions.md
    cp templates/inbox.md dein-projekt/docs/INBOX.md
+   mkdir -p dein-projekt/docs/meetings
+   ```
+
+   **Team-Projekt:**
+   ```bash
+   cp templates/CLAUDE.md dein-projekt/CLAUDE.md
+   cp templates/product.md dein-projekt/docs/product.md
+   cp templates/decisions.md dein-projekt/docs/decisions.md
+   cp templates/inbox.md dein-projekt/docs/INBOX.md
+   cp templates/mission.md dein-projekt/docs/team/[name]-mission.md
+   mkdir -p dein-projekt/docs/meetings
    ```
 3. **Passe an:** Fülle die Platzhalter in den Templates aus
-4. **Optional:** Kopiere `modus-operandi.md` in dein Projekt-Repo und passe den Abschnitt "Projektspezifische Anpassung" an
+4. **Optional:** Kopiere `modus-operandi.md` in dein Projekt-Repo (`docs/modus-operandi.md` bei Solo, `docs/team/modus-operandi.md` bei Team) und passe den Abschnitt "Projektspezifische Anpassung" an
 
 ### Oder: Lass Claude die Anpassung machen
 
@@ -48,8 +59,8 @@ kommunizieren über [Kanal], treffen uns [Rhythmus].
 | [CLAUDE.md](templates/CLAUDE.md) | KI-Briefing pro Projekt (< 200 Zeilen) |
 | [product.md](templates/product.md) | Product Requirements Document (PRD) |
 | [decisions.md](templates/decisions.md) | Architektur-Entscheidungslog |
-| [mission.md](templates/mission.md) | Mission-Dokument pro Teammitglied |
-| [meeting-note.md](templates/meeting-note.md) | Strukturierte Meeting-Notiz |
+| [mission.md](templates/mission.md) | Mission-Dokument pro Teammitglied (nur Team) |
+| [meeting-note.md](templates/meeting-note.md) | Strukturierte Meeting-Notiz (Kunden + Team) |
 | [inbox.md](templates/inbox.md) | Offene Änderungen aus Meetings |
 
 ## Kern-Ideen

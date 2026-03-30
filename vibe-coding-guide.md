@@ -128,9 +128,8 @@ Die KI wird Lücken aufdecken, die du übersehen hast. Iteriere 2-3 Runden, bis 
 
 Erstelle vor dem ersten Code:
 
-1. **ARCHITECTURE.md** — Projektstruktur, Stack-Übersicht, Ordnerstruktur
-2. **ROADMAP.md** — Phasen-Plan mit klaren Meilensteinen
-3. **CLAUDE.md** — Kontextdokument für die KI (< 200 Zeilen, siehe unten)
+1. **architecture.md** — Projektstruktur, Stack-Übersicht, Ordnerstruktur
+2. **CLAUDE.md** — Kontextdokument für die KI (< 200 Zeilen, siehe unten)
 
 #### CLAUDE.md — Das Gedächtnis deines Projekts
 
@@ -143,7 +142,7 @@ Die CLAUDE.md-Datei ist das wichtigste Steuerungsinstrument für KI-Sessions. Si
 
 **Praxisbeispiel:** Eine CLAUDE.md für eine Node.js/PostgreSQL-App enthält Regeln wie "JSONB-Writes: Immer `$1::jsonb` Cast verwenden" und "DATE-Spalten kommen als Strings, nie `new Date()` darauf anwenden." Ohne solche Regeln baut die KI dieselben Bugs immer wieder ein.
 
-**Goldene Regel:** Unter 200 Zeilen halten. Alles darüber hinaus gehört in spezialisierte Docs (`docs/ARCHITECTURE.md`, `docs/CONVENTIONS.md`).
+**Goldene Regel:** Unter 200 Zeilen halten. Alles darüber hinaus gehört in spezialisierte Docs (`docs/architecture.md`, `docs/CONVENTIONS.md`).
 
 ### Phase 4: Iteratives Bauen — Die Session-Schleife
 
@@ -152,7 +151,7 @@ Jede Coding-Session folgt dem gleichen Muster:
 ```
 ┌─────────────────────────────────────────────┐
 │  1. KONTEXT LADEN                           │
-│     → CLAUDE.md + DECISIONS.md + ROADMAP.md │
+│     → CLAUDE.md + decisions.md              │
 │     → Aktuellen Stand verstehen             │
 ├─────────────────────────────────────────────┤
 │  2. AUFGABE DEFINIEREN                      │
@@ -172,8 +171,7 @@ Jede Coding-Session folgt dem gleichen Muster:
 ├─────────────────────────────────────────────┤
 │  5. SESSION ABSCHLIEßEN                     │
 │     → Tests laufen lassen                   │
-│     → DECISIONS.md aktualisieren            │
-│     → ROADMAP.md updaten                    │
+│     → decisions.md aktualisieren             │
 │     → Sauberer Commit mit klarer Message    │
 │     → Version bumpen                        │
 └─────────────────────────────────────────────┘
@@ -181,7 +179,7 @@ Jede Coding-Session folgt dem gleichen Muster:
 
 **Warum Planen vor Coden?** Die KI springt gerne direkt in die Implementierung. Das führt zu Code, der das falsche Problem löst. Trenne bewusst: Erst planen (Was bauen wir? Welche Dateien sind betroffen? Welche Risiken gibt es?), dann implementieren.
 
-### Phase 5: Entscheidungen dokumentieren — DECISIONS.md
+### Phase 5: Entscheidungen dokumentieren — decisions.md
 
 Jede architektonische oder produktbezogene Entscheidung gehört in ein Entscheidungslog.
 
@@ -203,10 +201,10 @@ Jede architektonische oder produktbezogene Entscheidung gehört in ein Entscheid
 #### Warum das unverzichtbar ist:
 
 - **Für dich:** In 3 Monaten weißt du nicht mehr, warum du X statt Y gewählt hast
-- **Für die KI:** Sie liest DECISIONS.md am Anfang jeder Session und vermeidet so, bereits getroffene Entscheidungen umzuwerfen
+- **Für die KI:** Sie liest decisions.md am Anfang jeder Session und vermeidet so, bereits getroffene Entscheidungen umzuwerfen
 - **Für die Qualität:** Ohne Entscheidungslog baut die KI bei jedem Refactoring potenziell Architektur um, die du bewusst so gewählt hast
 
-**Pro-Tipp:** Archiviere ältere Entscheidungen regelmäßig (z.B. nach 20-30 Sessions) in eine separate Datei (`decisions-archive.md`), damit DECISIONS.md nicht zu lang wird.
+**Pro-Tipp:** Archiviere ältere Entscheidungen regelmäßig (z.B. nach 20-30 Sessions) in eine separate Datei (`decisions-archive.md`), damit decisions.md nicht zu lang wird.
 
 #### Architecture Decision Records (ADRs)
 
@@ -240,7 +238,7 @@ KI-generierter Code ist **untrusted Code** — behandle ihn so.
 - **Lass die KI Tests schreiben:** "Schreibe Unit-Tests für die Funktion X" funktioniert zuverlässig
 - **Lauf Tests vor jedem Commit:** `npm test` als feste Gewohnheit
 - **Regressions-Testfälle:** Wenn ein Bug auftritt, erstelle einen Testfall dafür, damit er nicht wiederkommt
-- **Session-Ende-Checkliste:** Tests grün? DECISIONS.md aktuell? Commit sauber?
+- **Session-Ende-Checkliste:** Tests grün? decisions.md aktuell? Commit sauber?
 
 **Praxisbeispiel:** Ein reales Projekt wuchs von 0 auf knapp 100 Tests über mehrere Dutzend Sessions. Jeder größere Bug wurde als Testfall verewigt. Die Test-Suite fängt regelmäßig Fehler ab, die die KI bei Refactorings einbaut.
 
@@ -284,7 +282,7 @@ Dein Code bringt niemandem etwas, wenn er nur auf deinem Laptop läuft.
 
 2. **Immer einen Plan machen lassen.** Bevor die KI coden darf, soll sie erklären, was sie vorhat und welche Dateien betroffen sind.
 
-3. **Entscheidungen sofort dokumentieren.** Jede Session endet mit einem Update von DECISIONS.md. Keine Ausnahmen.
+3. **Entscheidungen sofort dokumentieren.** Jede Session endet mit einem Update von decisions.md. Keine Ausnahmen.
 
 4. **CLAUDE.md pflegen.** Wenn du eine Konvention etablierst oder einen Bug findest, der auf einem Missverständnis beruht: In die CLAUDE.md eintragen, damit die KI es beim nächsten Mal richtig macht.
 
@@ -413,20 +411,19 @@ Die KI interpretiert strukturierte, modulare Spezifikationen deutlich besser als
 dein-projekt/
 ├── CLAUDE.md              # KI-Kontext (< 200 Zeilen)
 ├── docs/
-│   ├── PRODUCT.md          # PRD — Was bauen wir und warum?
-│   ├── ARCHITECTURE.md     # Stack, Struktur, Ordneraufbau
-│   ├── ROADMAP.md          # Phasen-Plan mit Status
-│   ├── DECISIONS.md        # Entscheidungslog (chronologisch)
+│   ├── product.md          # PRD — Was bauen wir und warum?
+│   ├── architecture.md     # Stack, Struktur, Ordneraufbau
+│   ├── decisions.md        # Entscheidungslog (chronologisch)
 │   ├── DESIGN_SYSTEM.md    # Visuelle Richtlinien
 │   ├── TESTING.md          # Teststrategie
 │   ├── adr/                # Architecture Decision Records
 │   ├── concepts/           # Feature-Konzepte
 │   ├── plans/              # Implementierungspläne
 │   ├── audit/              # Codebase-Audit-Berichte
+│   ├── meetings/           # Meeting-Notizen
 │   └── team/               # Team-Koordination (siehe Teil 8)
 │       ├── modus-operandi.md  # Wie wir zusammenarbeiten
-│       ├── [name]-mission.md  # Mission pro Person
-│       └── meetings/          # Meeting-Notizen
+│       └── [name]-mission.md  # Mission pro Person
 ├── .env                    # Environment Variables (gitignored!)
 └── ...
 ```
@@ -437,10 +434,9 @@ dein-projekt/
 
 | Dokument | Wann erstellen? | Wann aktualisieren? |
 |----------|----------------|---------------------|
-| PRODUCT.md | Vor dem ersten Code | Bei Scope-Änderungen |
-| ARCHITECTURE.md | Nach Stack-Entscheidung | Bei neuen Modulen/Services |
-| ROADMAP.md | Vor dem ersten Code | Nach jeder Session |
-| DECISIONS.md | Ab Session 1 | Nach jeder Session |
+| product.md | Vor dem ersten Code | Bei Scope-Änderungen |
+| architecture.md | Nach Stack-Entscheidung | Bei neuen Modulen/Services |
+| decisions.md | Ab Session 1 | Nach jeder Session |
 | CLAUDE.md | Vor dem ersten Code | Wenn neue Konventionen entstehen |
 | Konzepte | Vor komplexen Features | Einmalig (dann Implementierung) |
 | ADRs | Bei folgenreichen Entscheidungen | Selten (superseded/deprecated) |
@@ -465,7 +461,7 @@ Inspiriert von Dave Blundin (Link Ventures, Moonshots-Podcast EP #235): **Arbeit
 
 ### Was sich ändert: 2 zusätzliche Artefakt-Typen
 
-Zu den Projekt-Dokumenten (CLAUDE.md, PRODUCT.md, ARCHITECTURE.md, DECISIONS.md, ROADMAP.md) kommen:
+Zu den Projekt-Dokumenten (CLAUDE.md, product.md, architecture.md, decisions.md) kommen:
 
 #### Mission-Dokument (pro Person)
 
@@ -521,7 +517,7 @@ Im Solo-Projekt verweist CLAUDE.md auf deine Docs. Im Team verweist es zusätzli
 → Lies docs/team/[name]-mission.md für aktuellen Status.
 
 ## Was bauen wir?
-→ Lies docs/PRODUCT.md
+→ Lies docs/product.md
 
 ## Architektur
 → Lies docs/architecture.md
@@ -583,7 +579,7 @@ Claude Code unterstützt wiederverwendbare "Skills" — vorgefertigte Workflows 
 1. Idee dokumentieren und PRD schreiben
 2. PRD von der KI challengen lassen (2-3 Runden)
 3. Tech-Stack festlegen
-4. CLAUDE.md, ARCHITECTURE.md, ROADMAP.md erstellen
+4. CLAUDE.md, architecture.md erstellen
 5. Scaffolding (Projektstruktur anlegen lassen)
 6. Erste Kernfunktion implementieren und deployen
 
@@ -591,7 +587,7 @@ Claude Code unterstützt wiederverwendbare "Skills" — vorgefertigte Workflows 
 
 7. Feature für Feature implementieren (eine Session = ein Feature)
 8. Nach jedem Feature: Tests, Commit, Docs-Update
-9. DECISIONS.md wächst organisch
+9. decisions.md wächst organisch
 10. Erstes Codebase-Audit nach ~10 Sessions
 
 ### Woche 7-12: Polish & Härtung
@@ -620,8 +616,7 @@ Claude Code unterstützt wiederverwendbare "Skills" — vorgefertigte Workflows 
 - [ ] PRD geschrieben und von KI challenged
 - [ ] Tech-Stack festgelegt
 - [ ] CLAUDE.md erstellt
-- [ ] ARCHITECTURE.md erstellt
-- [ ] ROADMAP.md mit Phasen erstellt
+- [ ] architecture.md erstellt
 - [ ] Git-Repository initialisiert
 - [ ] .env-Datei in .gitignore
 - [ ] Erste Kernfunktion implementiert und getestet
@@ -630,8 +625,7 @@ Claude Code unterstützt wiederverwendbare "Skills" — vorgefertigte Workflows 
 ### Checkliste: Session beenden
 
 - [ ] Alle Tests grün (`npm test`)
-- [ ] DECISIONS.md aktualisiert
-- [ ] ROADMAP.md Status aktualisiert
+- [ ] decisions.md aktualisiert
 - [ ] Ggf. CLAUDE.md um neue Konventionen ergänzt
 - [ ] Sauberer Commit (Conventional Commits Format)
 - [ ] Version gebumpt (bei Feature-Releases)
