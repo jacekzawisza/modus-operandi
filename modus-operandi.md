@@ -130,37 +130,36 @@ Datum — Was — Wer — Warum
 **Wer erstellt:** Wer das Meeting leitet (Aufnahme starten, automatisch transkribieren)
 **Tooling:** Deepgram / Whisper oder beliebiges Transkriptions-Tool
 
-**Zweistufiger Workflow:**
+**Workflow:**
 
 ```
-1. AUFNEHMEN → Transkript erstellen (automatisch)
-   Ablage: docs/meetings/transcripts/YYYY-MM-DD-thema.md
+1. AUFNEHMEN → Transkript erstellen (automatisch, z.B. ChatGPT, Deepgram, Whisper)
 
-2. DESTILLIEREN → Meeting-Notiz aus Transkript (AI-Job)
-   KI liest Transkript → erstellt strukturierte Notiz
+2. DESTILLIEREN → KI-Zusammenfassung erstellen lassen
+   KI liest Transkript → erstellt strukturierte Zusammenfassung
    (Entscheidungen, Action Items, offene Fragen)
+
+3. KORRIGIEREN → Zusammenfassung kurz gegenchecken
+   Sprecherzuordnung prüfen, offensichtliche Fehler korrigieren
+   Zeitaufwand: 2-5 Minuten
+
+4. HOCHLADEN → Nur die Zusammenfassung ins Repo
    Ablage: docs/meetings/YYYY-MM-DD-thema.md
    Das ist das Artefakt das Claude liest und das Team nutzt
 ```
 
-**Wie destilliert man?** Transkript an Claude geben mit dem Prompt:
-```
-Lies dieses Meeting-Transkript und erstelle eine strukturierte
-Meeting-Notiz nach unserem Template (Teilnehmer, Entscheidungen,
-Action Items, Offene Fragen). Dateiname: YYYY-MM-DD-thema.md
-```
+**Warum nur Zusammenfassung, kein volles Transkript ins Repo?**
+- Transkripte haben oft fehlerhafte Sprecherzuordnung → Rauschen im Repo
+- Zusammenfassung = destilliertes Arbeits-Artefakt: kurz, strukturiert, actionable
+- Transkript lokal behalten als Backup (bei "Das hab ich so nie gesagt")
+- Weniger Token-Verbrauch wenn Claude das Repo liest
 
-**Unterschied Intern vs. Extern:**
+**Welche Meetings:**
 
-- **Jour fixe (intern, nur Team):** Transkript + Notiz ins Repo
-- **Arbeitstermin:** Notiz ins Repo, Transkript optional (nur bei Architektur-Entscheidungen)
-- **Kunden-/Stakeholder-Meeting (Solo + Team):** Transkript + Notiz ins Repo (Kundenwünsche = wichtig)
+- **Jour fixe (intern, nur Team):** Zusammenfassung ins Repo
+- **Arbeitstermin:** Zusammenfassung ins Repo (bei Architektur-Entscheidungen)
+- **Kunden-/Stakeholder-Meeting:** Zusammenfassung ins Repo (Kundenwünsche = wichtig)
 - **Ad-hoc Calls:** Nur Notiz, nur wenn eine Entscheidung fiel
-
-**Warum beides (Transkript + Notiz)?**
-- Die **Notiz** ist das Arbeits-Artefakt: kurz, strukturiert, actionable
-- Das **Transkript** ist das Backup: wenn jemand fragt "Was GENAU hat der Kunde gesagt?" → nachschlagen
-- AI kann Transkripte durchsuchen → Kontext der in keiner Notiz steht
 
 ### 2c. INBOX.md — Brücke zwischen Meetings und Code-Sessions
 
