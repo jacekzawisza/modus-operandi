@@ -347,6 +347,7 @@ Dein Code bringt niemandem etwas, wenn er nur auf deinem Laptop läuft.
 - Security-Scanner einsetzen (Snyk, Semgrep)
 - Auth-Code immer reviewen
 - Security-Scans in den Workflow integrieren: vor jedem Deployment mindestens einmal `npx snyk test` oder `semgrep --config auto` laufen lassen
+- **Regelmäßige Security-Reviews:** Nutze den Befehl `/security-review` in Claude Code, um deine App systematisch auf Schwachstellen prüfen zu lassen. Empfohlen: Alle 2-4 Wochen oder vor jedem größeren Release.
 
 ### Falle 6: Docker-Einschränkungen
 

@@ -51,11 +51,31 @@ Das ist kein "AI beobachtet Mitarbeiter heimlich", sondern: **Arbeit wird absich
 
 Seit dem EU AI Act gelten für KI am Arbeitsplatz besondere Regeln. Systeme im Bereich "employment / workers' management" können als Hochrisiko eingestuft werden. Deshalb: Wir verkaufen das nicht als "Tracking", sondern als **weniger Sucherei, weniger Doppelarbeit, weniger unnötige Meetings, sauberere Übergaben.**
 
+### Claude Code Teams Usage Tracking (Optional)
+
+Für Teams die Claude Code intensiv nutzen: Das **Teams-Dashboard** (`claude.ai/analytics/claude-code`) bietet Usage-Metriken und Contribution-Tracking via GitHub-Integration.
+
+**Empfehlung:**
+- **Setup:** GitHub-App installieren, Team einladen (siehe `docs/roadmap.md` im Navigator-Repo)
+- **Metriken:** Tokens, Sessions, PRs, Lines of Code mit Claude-Hilfe
+- **Zweck:** Prozess-Optimierung, nicht individuelle Bewertung
+- **Datenschutz:** Aggregierte Daten, keine persönliche Leistungsüberwachung
+
 ---
 
 ## Unser Setup: 6 Artefakt-Typen
 
 Inspiriert von Blundins Ansatz, kombiniert mit dem [Vibe Coding Guide](vibe-coding-guide.md) für die technischen Artefakte. Die Team-Ebene ergänzt die Projekt-Ebene — beides zusammen ergibt das AI-lesbare Betriebssystem.
+
+### 0. Security-Review (regelmäßig)
+
+**Was:** Systematische Sicherheitsprüfung der Codebase mit Claude Code.
+**Befehl:** `/security-review` in Claude Code
+**Frequenz:** Alle 2-4 Wochen oder vor jedem größeren Release
+**Output:** Liste von Schwachstellen mit Priorisierung und Fix-Empfehlungen
+**Dokumentation:** Ergebnisse in `docs/audit/security-YYYY-MM-DD.md` speichern
+
+> Siehe [Vibe Coding Guide](vibe-coding-guide.md#falle-5-security-vernachlässigen) für Details.
 
 ### 1. Mission-Dokument (pro Person)
 
