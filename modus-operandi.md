@@ -77,6 +77,26 @@ Inspiriert von Blundins Ansatz, kombiniert mit dem [Vibe Coding Guide](vibe-codi
 
 > Siehe [Vibe Coding Guide](vibe-coding-guide.md#falle-5-security-vernachlässigen) für Details.
 
+### 0b. Secrets & Zugangsdaten — Niemals in KI-Konversationen teilen
+
+**Regel:** API-Keys, Passwörter, Tokens und andere Geheimnisse dürfen **niemals** in Konversationen mit KI-Modellen (Claude, ChatGPT, Copilot, etc.) geteilt werden.
+
+**Warum:**
+- KI-Konversationen können in Logs, Trainingsdaten oder Cloud-Speicher landen
+- Auch bei "privaten" Sessions gibt es keine Garantie, dass der Inhalt nicht gespeichert wird
+- Ein einmal geteiltes Secret ist als kompromittiert zu betrachten
+
+**Wenn es doch passiert ist:**
+1. **Sofort den Key/das Passwort rotieren** — nicht "irgendwann", sondern jetzt
+2. Neuen Key generieren und sicher ablegen (`.env`, Passwort-Manager, etc.)
+3. Prüfen ob der alte Key in Git-History gelandet ist → ggf. `git filter-branch` oder BFG Repo-Cleaner
+
+**Best Practices:**
+- Secrets gehören in `.env`-Dateien (gitignored) oder Passwort-Manager (1Password, Bitwarden)
+- In KI-Konversationen stattdessen Platzhalter verwenden: `$API_KEY`, `<your-token-here>`
+- `.env.example` mit Platzhaltern ins Repo committen, nie `.env` selbst
+- Bei Code-Reviews: Auf hardcodierte Secrets prüfen (Teil des Security-Reviews)
+
 ### 1. Mission-Dokument (pro Person)
 
 **Was:** Ein Einseiter pro Teammitglied im Repo. Ziel, aktueller Stand, nächste Schritte, Blocker.
