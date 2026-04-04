@@ -361,6 +361,18 @@ Dein Code bringt niemandem etwas, wenn er nur auf deinem Laptop läuft.
 
 **Lösung:** HDMI-Dummy-Stecker kaufen (< 10 EUR), der dem System einen Monitor vortäuscht. Sleep-Mode deaktivieren. Services als LaunchAgents konfigurieren, die beim Systemstart automatisch starten.
 
+### Falle 8: Session verloren durch IDE-Aktion
+
+**Problem:** Wenn du Claude Code in der CLI innerhalb von VS Code nutzt und versehentlich ein neues Fenster öffnest oder einen neuen Ordner öffnest, schließt VS Code das Terminal — und eine laufende Claude Code Session geht verloren. Besonders ärgerlich bei langen Sessions mit viel aufgebautem Kontext.
+
+**Lösung:** Die Session ist nicht wirklich weg. Im Terminal eingeben:
+
+```bash
+claude --resume
+```
+
+Das stellt die letzte Session wieder her — inklusive Kontext und Gesprächshistorie. **Tipp:** Gewöhne dir an, regelmäßig zu committen und Entscheidungen zu dokumentieren, damit selbst bei einem echten Session-Verlust nichts Wichtiges verloren geht.
+
 ---
 
 ## Teil 6: Specification Engineering — Der PRD-Prozess im Detail
