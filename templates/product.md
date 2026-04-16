@@ -13,35 +13,47 @@ _Stand: [Datum]_
 ## 3. Produktvision
 [1-2 Sätze: Was ist das Produkt, wenn es fertig ist?]
 
-## 4. Kernfunktionen (Must-Have)
-1. **[Feature 1]** — [Kurzbeschreibung]
-2. **[Feature 2]** — [Kurzbeschreibung]
-3. **[Feature 3]** — [Kurzbeschreibung]
-
-## 5. Nicht-Ziele (explizit NICHT im Scope)
+## 4. Nicht-Ziele (explizit NICHT im Scope)
 - [Was bauen wir bewusst NICHT?]
 - [Was ist eine Erweiterung für später?]
 
-## 6. Tech-Stack
+## 5. Tech-Stack
 | Komponente | Technologie | Begründung |
 |-----------|-------------|------------|
 | Framework | [z.B. Next.js] | [Warum?] |
 | Datenbank | [z.B. PostgreSQL] | [Warum?] |
 | Hosting | [z.B. Hetzner + Coolify] | [Warum?] |
 
+## 6. Kernfunktionen & Roadmap
+
+### Phase 1: [Name] ([Zeitraum])
+
+**Deadline: [Datum] — [Kontext zur Deadline]**
+
+| # | Feature | Beschreibung | Priorität |
+|---|---------|-------------|-----------|
+| 1 | **[Feature 1]** | [Kurzbeschreibung] | Hoch |
+| 2 | **[Feature 2]** | [Kurzbeschreibung] | Mittel |
+
+#### Meilensteine
+
+| Woche | KW | Meilenstein | Status |
+|-------|-----|-----------|--------|
+| 1 | XX | [Meilenstein] | ☐ |
+| 2 | XX | [Meilenstein] | ☐ |
+
+### Phase 2: [Name] ([Zeitraum])
+[Weitere Phasen nach gleichem Schema]
+
 ## 7. Erfolgskriterien
 - [ ] [Woran erkennt man, dass es funktioniert?]
 - [ ] [Messbare KPIs]
 
-## 8. User Journeys
+## 8. Risiken
 
-### Journey 1: [Name der Journey]
-```
-Nutzer kommt auf Startseite
-    → [Schritt 1]
-    → [Schritt 2]
-    → [Ergebnis]
-```
+| Risiko | Wahrscheinlichkeit | Impact | Mitigation |
+|--------|-------------------|--------|------------|
+| [Risiko 1] | [H/M/N] | [H/M/N] | [Maßnahme] |
 
 ## 9. Offene Fragen
 - [Was muss noch geklärt werden?]
@@ -49,3 +61,4 @@ Nutzer kommt auf Startseite
 ---
 
 _Dieses PRD wurde von der KI challenged (Runde: [1/2/3]). Letzte Überarbeitung: [Datum]._
+_Wird bei jedem Review aktualisiert (Meilensteine + Status)._

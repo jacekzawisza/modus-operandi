@@ -56,7 +56,7 @@ Seit dem EU AI Act gelten für KI am Arbeitsplatz besondere Regeln. Systeme im B
 Für Teams die Claude Code intensiv nutzen: Das **Teams-Dashboard** (`claude.ai/analytics/claude-code`) bietet Usage-Metriken und Contribution-Tracking via GitHub-Integration.
 
 **Empfehlung:**
-- **Setup:** GitHub-App installieren, Team einladen (siehe `docs/roadmap.md` im Navigator-Repo)
+- **Setup:** GitHub-App installieren, Team einladen
 - **Metriken:** Tokens, Sessions, PRs, Lines of Code mit Claude-Hilfe
 - **Zweck:** Prozess-Optimierung, nicht individuelle Bewertung
 - **Datenschutz:** Aggregierte Daten, keine persönliche Leistungsüberwachung
@@ -242,14 +242,17 @@ Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (n
 
 ### 4. product.md / PRD (pro Projekt)
 
-**Was:** Das Product Requirements Document — definiert WAS gebaut wird und WARUM, bevor eine Zeile Code entsteht.
+**Was:** Das Product Requirements Document — definiert WAS gebaut wird, WARUM und WANN. Enthält auch die Roadmap mit Meilensteinen und Status-Tracking.
 **Wo:** `docs/product.md`
 **Wer erstellt:** Projektleitung, idealerweise vor Projektstart
-**Enthält:** Problem, Zielgruppe, Kernfunktionen, Nicht-Ziele, Tech-Stack, Erfolgskriterien, User Journeys
+**Wer aktualisiert:** Nach jeder Session (Meilensteine) + bei Scope-Änderungen (Features)
+**Enthält:** Problem, Zielgruppe, Kernfunktionen mit Phasen/Meilensteinen, Nicht-Ziele, Tech-Stack, Erfolgskriterien, Risiken
 
 > Vorlage: [templates/product.md](templates/product.md)
 
-**Warum auch im Team?** Ohne PRD baut jeder etwas anderes. Es ist der "Vertrag" zwischen Projektleitung (was sie will) und Umsetzung (was gebaut wird). Claude liest es und versteht den Kontext.
+**Warum PRD + Roadmap in einem Dokument?** Bei Solo- und Kleinteam-Projekten entscheidet dieselbe Person WAS und WANN gebaut wird. Zwei getrennte Dokumente (product.md + roadmap.md) verdoppeln den Pflegeaufwand ohne Mehrwert. Features sind nach Phasen priorisiert — das "Wann" ist direkt an das "Was" gekoppelt.
+
+> **Hinweis:** Bei größeren Teams (>5 Personen), wo Produkt-Scope und Timeline von verschiedenen Rollen gemanagt werden, kann eine separate `roadmap.md` sinnvoll sein.
 
 **Aus dem Vibe Coding Guide:** Vor der Umsetzung das PRD von der KI challengen lassen (2-3 Runden). Die KI deckt Lücken auf.
 
