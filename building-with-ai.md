@@ -1,4 +1,4 @@
-# Vibe Coding mit Claude — Der Praxis-Guide
+# Building with AI — Praxis-Guide für Solo-Builder und Teams
 
 *Von Jacek Zawisza | Stand: März 2026*
 
@@ -6,17 +6,29 @@
 
 ## Über diesen Guide
 
-Dieser Guide richtet sich an Nicht-Entwickler, Gründer und Wissensarbeiter, die mit KI eigene Software bauen wollen — ohne klassisches Informatikstudium, ohne Dev-Team. Er basiert auf umfangreicher Praxiserfahrung aus realen Projekten (von der Idee bis zum deployed SaaS mit Claude Code), ergänzt um Best Practices aus der Vibe-Coding-Community 2025/2026.
+Dieser Guide ist die **Praxis-Schicht** des [Modus Operandi](modus-operandi.md). Während Modus Operandi das *Operating Model* beschreibt (welche Artefakte, welcher Rhythmus, welche Disziplin), beschreibt dieser Guide die *konkrete Bau-Arbeit*: Wie du als Einzelperson oder im Kleinteam mit Claude Software baust — vom PRD über die Session-Schleife bis zum Deployment.
 
-Die zentrale Erkenntnis: **Vibe Coding ist eine Demokratisierung von Code.** Mit den richtigen Leitplanken kommt man ins Laufen. 80 % sind schnell erreichbar — aber die letzten 20 % (Bugfixes, Usability, Edge Cases) werden mühsam, wenn man ohne Struktur arbeitet. Dieser Guide gibt dir die Struktur.
+Zielpublikum: Solo-Builder, Gründer, Wissensarbeiter und kleine Teams, die mit KI eigene Software bauen — ohne klassisches Informatikstudium, ohne Dev-Team. Basis: umfangreiche Praxiserfahrung aus realen Projekten (von der Idee bis zum deployed SaaS mit Claude Code), ergänzt um Best Practices aus der Community 2025/2026.
+
+### Begriffe: Vibe Coding, Agentic Coding, Building with AI
+
+Drei Begriffe, die dir in der Community begegnen:
+
+- **Vibe Coding** (Karpathy, Feb 2025): Schnelles, explorierendes Bauen mit KI — gut für Prototypen, MVPs, Wegwerf-Code. Karpathy hat später klargestellt: Vibe Coding ist *nicht* dasselbe wie professionelle Software-Entwicklung mit AI-Unterstützung.
+- **Agentic Coding** (Anthropic/Cursor-Sprachraum, 2025/2026): Bauen mit AI-Agenten, die mehr Schritte autonom ausführen — strukturierter als Vibe Coding, mit klaren Spec/Plan/Execute-Phasen.
+- **Building with AI** (dieser Guide): Neutraler Sammelbegriff. Umfasst beide Stilrichtungen und legt den Fokus auf das, was sich nicht ändert — Disziplin, Artefakte, klare Specs.
+
+Du wirst hier Patterns aus beiden Welten finden: schnell starten wie Vibe Coding, sauber dokumentieren wie Agentic Engineering.
+
+Die zentrale Erkenntnis: **AI-natives Bauen ist eine Demokratisierung von Code.** Mit den richtigen Leitplanken kommt man ins Laufen. 80 % sind schnell erreichbar — aber die letzten 20 % (Bugfixes, Usability, Edge Cases) werden mühsam, wenn man ohne Struktur arbeitet. Dieser Guide gibt dir die Struktur.
 
 ---
 
-## Teil 1: Mindset — Was Vibe Coding wirklich ist
+## Teil 1: Mindset — Vom Coder zum Dirigenten
 
-### Die neue Rolle: Vom Coder zum Dirigenten
+### Die neue Rolle
 
-Beim Vibe Coding schreibst du keinen Code Zeile für Zeile. Stattdessen beschreibst du, was du willst, und lässt eine KI den Code generieren. Deine Rolle verschiebt sich: Du wirst zum **Produktmanager deines eigenen Projekts** — du definierst Was und Warum, die KI kümmert sich um das Wie.
+Beim AI-nativen Bauen schreibst du keinen Code Zeile für Zeile. Stattdessen beschreibst du, was du willst, und lässt eine KI den Code generieren. Deine Rolle verschiebt sich: Du wirst zum **Produktmanager deines eigenen Projekts** — du definierst Was und Warum, die KI kümmert sich um das Wie.
 
 Das bedeutet nicht, dass du nichts verstehen musst. Im Gegenteil: Je besser du verstehst, was du willst und wie Software grundsätzlich funktioniert, desto besser wird das Ergebnis.
 
@@ -24,7 +36,7 @@ Das bedeutet nicht, dass du nichts verstehen musst. Im Gegenteil: Je besser du v
 
 Der erste Prototyp steht schnell. Eine funktionsfähige App in wenigen Stunden — das ist real. Aber: KI kann nur eine begrenzte Anzahl Schritte vorausdenken und kennt nie den vollständigen Scope deines Projekts. Die verbleibenden 20 % — Edge Cases, Timezone-Bugs, Datenbankmigrationen, Security-Härtung — fressen überproportional viel Zeit. Der Schlüssel liegt in Vorplanung und Dokumentation.
 
-### Wann Vibe Coding passt — und wann nicht
+### Wann AI-natives Bauen passt — und wann nicht
 
 **Gut geeignet:**
 - Interne Tools und Prototypen
@@ -96,18 +108,20 @@ Bevor du auch nur eine Zeile Code generierst: Schreib auf, was du bauen willst.
 
 ### Phase 2: Das Product Requirements Document (PRD)
 
-Das PRD ist das wichtigste Dokument deines Projekts. Es ist dein Vertrag mit der KI.
+Das PRD (Datei: `docs/prd.md`) ist das wichtigste Dokument deines Projekts. Es ist dein Vertrag mit der KI.
 
 #### Was gehört rein?
 
 1. **Produktname und Positionierung**
 2. **Problem / Motivation** — Warum baust du das?
 3. **Zielgruppe** — Wer nutzt es?
-4. **Kernfunktionen** — Was sind die 3-5 Must-Have-Features?
-5. **Nicht-Ziele** — Was baust du bewusst NICHT?
-6. **Tech-Stack** — Welche Technologien werden verwendet?
+4. **Produktvision + Nicht-Ziele** — Was bauen wir, was bewusst NICHT?
+5. **Tech-Stack** (Kurzübersicht — Details in `architecture.md`)
+6. **Roadmap als Phasen-Narrative** — was lösen wir wann (keine konkreten Feature-Listen, die kommen in `backlog.md`)
 7. **Erfolgskriterien** — Woran erkennst du, dass es funktioniert?
-8. **User Journeys** — Wie sieht ein typischer Nutzungsablauf aus?
+8. **Risiken + offene Fragen**
+
+> Vollständige Template-Struktur: [templates/prd.md](templates/prd.md). Warum keine Feature-Listen im PRD: [Modus Operandi §6](modus-operandi.md#6-prdmd--product-requirements-document-pro-projekt).
 
 #### PRD challengen lassen
 
@@ -129,15 +143,15 @@ Die KI wird Lücken aufdecken, die du übersehen hast. Iteriere 2-3 Runden, bis 
 Erstelle vor dem ersten Code:
 
 1. **architecture.md** — Projektstruktur, Stack-Übersicht, Ordnerstruktur
-2. **CLAUDE.md** — Kontextdokument für die KI (< 200 Zeilen, siehe unten)
+2. **CLAUDE.md** — Kontextdokument für die KI (< 200 Zeilen)
 
-#### CLAUDE.md — Das Gedächtnis deines Projekts
+Was im Operating Model in jedes Artefakt gehört (Mission, Architecture, decisions etc.) und wann es aktualisiert wird, steht in [Modus Operandi §Unser Setup](modus-operandi.md#unser-setup-6-artefakt-typen) und [§Projekt-Lebenszyklus](modus-operandi.md#projekt-lebenszyklus-wie-artefakte-zusammenarbeiten). Hier nur die Bau-Praxis pro Datei.
 
-Die CLAUDE.md-Datei ist das wichtigste Steuerungsinstrument für KI-Sessions. Sie liegt im Projektwurzel und wird automatisch gelesen. Hier definierst du:
+#### CLAUDE.md in der Praxis
 
-- **Stack und Projektstruktur** — Damit die KI weiß, wo was liegt
+Die CLAUDE.md ist das Steuerungsinstrument pro Session. Was *im Sinne der Bau-Praxis* hier rein gehört (über die strukturellen Verweise hinaus):
+
 - **Coding-Konventionen** — Wie Fehler behandelt werden, wo Constants liegen, welche Patterns gelten
-- **Wichtige Entscheidungen** — Warum bestimmte Dinge so sind wie sie sind
 - **Fallen und Gotchas** — Bekannte Probleme, die die KI nicht wiederholen soll
 
 **Praxisbeispiel:** Eine CLAUDE.md für eine Node.js/PostgreSQL-App enthält Regeln wie "JSONB-Writes: Immer `$1::jsonb` Cast verwenden" und "DATE-Spalten kommen als Strings, nie `new Date()` darauf anwenden." Ohne solche Regeln baut die KI dieselben Bugs immer wieder ein.
@@ -146,67 +160,21 @@ Die CLAUDE.md-Datei ist das wichtigste Steuerungsinstrument für KI-Sessions. Si
 
 ### Phase 4: Iteratives Bauen — Die Session-Schleife
 
-Jede Coding-Session folgt dem gleichen Muster:
-
-```
-┌─────────────────────────────────────────────┐
-│  1. KONTEXT LADEN                           │
-│     → CLAUDE.md + decisions.md              │
-│     → Aktuellen Stand verstehen             │
-├─────────────────────────────────────────────┤
-│  2. AUFGABE DEFINIEREN                      │
-│     → Klare, präzise Aufgabenbeschreibung   │
-│     → Akzeptanzkriterien festlegen          │
-│     → "Nicht nur Hypothese, sondern Spec"   │
-├─────────────────────────────────────────────┤
-│  3. PLAN ERSTELLEN LASSEN                   │
-│     → KI erstellt einen Plan VOR dem Code   │
-│     → Du reviewst und gibst Feedback        │
-│     → Erst nach Freigabe: Implementierung   │
-├─────────────────────────────────────────────┤
-│  4. IMPLEMENTIEREN                          │
-│     → KI schreibt Code                      │
-│     → Du testest und gibst Feedback         │
-│     → Iterationsschleife bis es passt       │
-├─────────────────────────────────────────────┤
-│  5. SESSION ABSCHLIEßEN                     │
-│     → Tests laufen lassen                   │
-│     → decisions.md aktualisieren             │
-│     → Sauberer Commit mit klarer Message    │
-│     → Version bumpen                        │
-└─────────────────────────────────────────────┘
-```
+Jede Coding-Session folgt dem gleichen 5-Schritt-Muster: Kontext laden → Aufgabe definieren → Plan erstellen lassen → Implementieren → Session abschließen.
 
 **Warum Planen vor Coden?** Die KI springt gerne direkt in die Implementierung. Das führt zu Code, der das falsche Problem löst. Trenne bewusst: Erst planen (Was bauen wir? Welche Dateien sind betroffen? Welche Risiken gibt es?), dann implementieren.
 
+> Vollständige Schritt-für-Schritt-Erklärung inkl. empfohlener Slash-Commands (`/session-start`, `/session-end`, `/commitpush`): [Modus Operandi §Session-Workflow](modus-operandi.md#session-workflow-aus-dem-builder-guide).
+
 ### Phase 5: Entscheidungen dokumentieren — decisions.md
 
-Jede architektonische oder produktbezogene Entscheidung gehört in ein Entscheidungslog.
+Jede architektonische oder produktbezogene Entscheidung gehört in ein Entscheidungslog (`docs/decisions.md`). Ohne dieses Log baut die KI bei jedem Refactoring potenziell Architektur um, die du bewusst so gewählt hast — und du weißt in drei Monaten nicht mehr warum.
 
-#### Bewährtes Format:
-
-```markdown
-## YYYY-MM-DD — Titel der Entscheidung (Session N)
-
-**Kontext:** Warum mussten wir entscheiden?
-
-### Was wurde gemacht
-1. **Change 1:** Was und warum
-2. **Change 2:** Was und warum
-
-### Hinweise
-- Besonderheiten, Folgeschritte, bekannte Limitationen
-```
-
-#### Warum das unverzichtbar ist:
-
-- **Für dich:** In 3 Monaten weißt du nicht mehr, warum du X statt Y gewählt hast
-- **Für die KI:** Sie liest decisions.md am Anfang jeder Session und vermeidet so, bereits getroffene Entscheidungen umzuwerfen
-- **Für die Qualität:** Ohne Entscheidungslog baut die KI bei jedem Refactoring potenziell Architektur um, die du bewusst so gewählt hast
+> Format, Beispiele und das Verhältnis zu Mission-Doc-Entscheidungen: [Modus Operandi §9 decisions.md](modus-operandi.md#9-decisionsmd-pro-projekt).
 
 **Pro-Tipp:** Archiviere ältere Entscheidungen regelmäßig (z.B. nach 20-30 Sessions) in eine separate Datei (`decisions-archive.md`), damit decisions.md nicht zu lang wird.
 
-#### Architecture Decision Records (ADRs)
+#### Architecture Decision Records (ADRs) — die schwergewichtige Variante
 
 Für besonders folgenreiche Entscheidungen lohnt sich ein formelleres Format:
 
@@ -278,21 +246,19 @@ Dein Code bringt niemandem etwas, wenn er nur auf deinem Laptop läuft.
 
 ### Do's
 
-1. **Anforderungen präzise formulieren.** Eine bloße Hypothese reicht nicht — Aufgaben müssen ausformuliert sein, mit klaren Akzeptanzkriterien.
+1. **Karpathys 4 Prinzipien als Default.** Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution. Siehe Teil 5 für Details. Diese Regeln gehören in jede CLAUDE.md (das Template enthält sie bereits).
 
-2. **Immer einen Plan machen lassen.** Bevor die KI coden darf, soll sie erklären, was sie vorhat und welche Dateien betroffen sind.
+2. **Entscheidungen sofort dokumentieren.** Jede Session endet mit einem Update von decisions.md. Keine Ausnahmen.
 
-3. **Entscheidungen sofort dokumentieren.** Jede Session endet mit einem Update von decisions.md. Keine Ausnahmen.
+3. **CLAUDE.md pflegen.** Wenn du eine Konvention etablierst oder einen Bug findest, der auf einem Missverständnis beruht: In die CLAUDE.md eintragen, damit die KI es beim nächsten Mal richtig macht.
 
-4. **CLAUDE.md pflegen.** Wenn du eine Konvention etablierst oder einen Bug findest, der auf einem Missverständnis beruht: In die CLAUDE.md eintragen, damit die KI es beim nächsten Mal richtig macht.
+4. **Modell bewusst wählen.** Token-hungrige Aufgaben (Recherche, lange Kontexte) auf günstigere Modelle. Architekturentscheidungen und komplexe Refactorings auf das stärkste Modell.
 
-5. **Modell bewusst wählen.** Token-hungrige Aufgaben (Recherche, lange Kontexte) auf günstigere Modelle. Architekturentscheidungen und komplexe Refactorings auf das stärkste Modell.
+5. **Regelmäßig Codebase-Audits machen.** Alle 5-10 Sessions: Lass die KI den gesamten Code reviewen. Sie findet fehlende Error-Handling, hardcodierte Strings, Memory Leaks und tote Referenzen. (Audit ist explizit beauftragtes Refactoring — kollidiert nicht mit "Surgical Changes" aus Karpathy 3.)
 
-6. **Regelmäßig Codebase-Audits machen.** Alle 5-10 Sessions: Lass die KI den gesamten Code reviewen. Sie findet fehlende Error-Handling, hardcodierte Strings, Memory Leaks und tote Referenzen.
+6. **Konzepte vor Features schreiben.** Für komplexere Features: Erst ein Konzeptdokument (`docs/concepts/feature-name.md`), dann Implementierung. Das spart Iterationen.
 
-7. **Konzepte vor Features schreiben.** Für komplexere Features: Erst ein Konzeptdokument (`docs/concepts/feature-name.md`), dann Implementierung. Das spart Iterationen.
-
-8. **Niemals API-Keys oder Tokens im Chat teilen.** Nutze `.env`-Dateien und Environment Variables.
+7. **Niemals API-Keys oder Tokens im Chat teilen.** Nutze `.env`-Dateien und Environment Variables.
 
 ### Don'ts
 
@@ -310,7 +276,89 @@ Dein Code bringt niemandem etwas, wenn er nur auf deinem Laptop läuft.
 
 ---
 
-## Teil 5: Die häufigsten Fallen — und wie du sie vermeidest
+## Teil 5: Die 4 Coding-Prinzipien — Regeln für die KI selbst
+
+Während Teil 4 dein Verhalten als Vibe Coder beschreibt, definiert dieser Teil **die Regeln, nach denen die KI arbeiten soll**. Sie gehören in die `CLAUDE.md` jedes Projekts und in deine globale `~/.claude/CLAUDE.md` — damit sie bei jeder Session automatisch greifen.
+
+Quelle: Andrej Karpathy hat in einem [vielzitierten Post](https://x.com/karpathy/status/2015883857489522876) die typischen Schwächen von LLMs beim Coden beschrieben. Forrest Chang hat daraus vier Prinzipien destilliert ([forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)). Diese Version ist leicht für deutschsprachige Solo-/Kleinteam-Projekte adaptiert.
+
+### Das Problem, das die Prinzipien lösen
+
+Karpathys Beobachtungen über LLM-Coding-Verhalten:
+
+- *"The models make wrong assumptions on your behalf and just run along with them without checking. They don't manage their confusion, don't seek clarifications, don't surface inconsistencies, don't present tradeoffs, don't push back when they should."*
+- *"They really like to overcomplicate code and APIs, bloat abstractions, don't clean up dead code... implement a bloated construction over 1000 lines when 100 would do."*
+- *"They still sometimes change/remove comments and code they don't sufficiently understand as side effects, even if orthogonal to the task."*
+
+### Die 4 Prinzipien
+
+**1. Think Before Coding** — Annahmen explizit machen, nicht still wählen
+
+LLMs picken oft eine Interpretation und laufen damit los. Stattdessen:
+- Bei Mehrdeutigkeit Interpretationen aufzeigen statt zu raten
+- Bei Unklarheit stoppen und fragen, nicht weiterlaufen
+- Wenn ein einfacherer Ansatz existiert: sagen
+- Trade-offs benennen, nicht still entscheiden
+
+**2. Simplicity First** — Minimum Code, der das Problem löst
+
+Gegen den Hang zur Überengineerung:
+- Keine Features über das Gefragte hinaus
+- Keine Abstraktionen für Single-Use-Code
+- Keine "Flexibility" oder "Configurability", die nicht angefordert wurde
+- Kein Error-Handling für unmögliche Szenarien
+- Wenn 200 Zeilen auch in 50 gehen: 50 schreiben
+
+**Test:** Würde ein Senior Engineer sagen, das ist überkompliziert? Wenn ja: vereinfachen.
+
+**3. Surgical Changes** — Nur das anfassen, was nötig ist
+
+Beim Bearbeiten existierenden Codes:
+- Kein Drive-by-Refactoring von Architektur, das nicht angefordert wurde
+- Existierenden Stil matchen, auch wenn ich's anders machen würde
+- Bei dead code: erwähnen, nicht ungefragt löschen
+
+**Erlaubt im Vorbeigehen** (Adaption für unsere Projekte):
+- Kleine Style-Angleichungen (Variablennamen konsistent benennen)
+- Offensichtliche Sicherheitsfixes
+- Kleine Effizienz-Verbesserungen
+- Aufräumen von Orphans, die durch die eigenen Änderungen entstanden sind
+
+**Nicht erlaubt:** unaufgeforderte Architektur-Eingriffe, neue Abstraktionen, "ich hätte das anders gemacht"-Refactorings. Im Zweifel: erwähnen statt machen.
+
+**Test:** Lässt sich jede geänderte Zeile direkt auf die Anfrage zurückführen?
+
+**4. Goal-Driven Execution** — Erfolgskriterien vor Implementierung
+
+Karpathy: *"LLMs are exceptionally good at looping until they meet specific goals... Don't tell it what to do, give it success criteria and watch it go."*
+
+Imperative Tasks in verifizierbare Goals umwandeln:
+
+| Statt... | Lieber... |
+|----------|-----------|
+| "Add validation" | "Schreib Tests für invalide Inputs, dann mach sie grün" |
+| "Fix the bug" | "Schreib einen Test, der den Bug reproduziert, dann fix bis grün" |
+| "Refactor X" | "Stell sicher, dass Tests vor und nach dem Refactoring grün sind" |
+
+Bei Multi-Step-Tasks einen kurzen Plan: `Schritt → Verifikation` pro Punkt.
+
+### Trade-off
+
+Diese Prinzipien biasen auf **Sorgfalt vor Geschwindigkeit**. Bei Trivialitäten (Typo-Fix, Einzeiler) Urteilsvermögen nutzen — nicht jede Änderung braucht den vollen Rigor.
+
+### Verhältnis zum Codebase-Audit
+
+Karpathy 3 sagt "Don't refactor things that aren't broken". Der regelmäßige Codebase-Audit (siehe Teil 4 Do's und Teil 10) ist davon **nicht betroffen** — ein Audit ist explizit beauftragtes Refactoring mit klarem Scope (AI Slop entfernen, hardcodierte Strings konsolidieren, fehlende Validation nachziehen). Die Surgical-Changes-Regel verhindert nur ungebetenes Drive-by-Refactoring während anderer Tasks.
+
+### Wo gehört das hin?
+
+- **Globale `~/.claude/CLAUDE.md`** — wirkt für alle deine Coding-Sessions
+- **Pro Projekt: `CLAUDE.md`** — das Template in `templates/CLAUDE.md` enthält den Block bereits, wird beim `cp` automatisch übernommen
+- Optional: das [Karpathy-Repo](https://github.com/forrestchang/andrej-karpathy-skills) als Plugin installieren statt selbst zu pflegen — zentrale Updates, weniger Wartung, aber weniger Anpassbarkeit
+
+---
+
+## Teil 6: Die häufigsten Fallen — und wie du sie vermeidest
 
 ### Falle 1: Datumsprobleme / Timezone-Bugs
 
@@ -375,11 +423,11 @@ Das stellt die letzte Session wieder her — inklusive Kontext und Gesprächshis
 
 ---
 
-## Teil 6: Specification Engineering — Der PRD-Prozess im Detail
+## Teil 7: Specification Engineering — Der PRD-Prozess im Detail
 
 ### Was ist Specification Engineering?
 
-Der wichtigste Shift im Vibe Coding 2025/2026: **Specification Engineering statt Prompt Engineering.** Statt einzelne Prompts zu optimieren, investierst du die Hauptarbeit in strukturierte, eindeutige Projekt-Spezifikationen. Je besser dein PRD und deine Dokumentation, desto weniger musst du bei der Implementierung nachsteuern.
+Der wichtigste Shift beim AI-nativen Bauen 2025/2026: **Specification Engineering statt Prompt Engineering.** Statt einzelne Prompts zu optimieren, investierst du die Hauptarbeit in strukturierte, eindeutige Projekt-Spezifikationen. Je besser dein PRD und deine Dokumentation, desto weniger musst du bei der Implementierung nachsteuern.
 
 ### Der Spec-First-Workflow
 
@@ -416,147 +464,33 @@ Die KI interpretiert strukturierte, modulare Spezifikationen deutlich besser als
 
 ---
 
-## Teil 7: Die Dokumenten-Landschaft — Was du pflegen solltest
+## Teil 8: Die Dokumenten-Landschaft — Wo alles liegt
 
-### Übersicht der empfohlenen Projektdokumente
+Welche Artefakte ein Projekt braucht (prd.md, architecture.md, backlog.md, decisions.md, concepts/, results/, meetings/, team/) und wie sie über den Projekt-Lebenszyklus zusammenarbeiten (Setup → Build → Post-Build), steht ausführlich im [**Modus Operandi**](modus-operandi.md):
 
-```
-dein-projekt/
-├── CLAUDE.md              # KI-Kontext (< 200 Zeilen)
-├── docs/
-│   ├── product.md          # PRD — Was bauen wir und warum?
-│   ├── architecture.md     # Stack, Struktur, Ordneraufbau
-│   ├── decisions.md        # Entscheidungslog (chronologisch)
-│   ├── DESIGN_SYSTEM.md    # Visuelle Richtlinien
-│   ├── TESTING.md          # Teststrategie
-│   ├── adr/                # Architecture Decision Records
-│   ├── concepts/           # Feature-Konzepte
-│   ├── plans/              # Implementierungspläne
-│   ├── audit/              # Codebase-Audit-Berichte
-│   ├── meetings/           # Meeting-Notizen
-│   └── team/               # Team-Koordination (siehe Teil 8)
-│       ├── modus-operandi.md  # Wie wir zusammenarbeiten
-│       └── [name]-mission.md  # Mission pro Person
-├── .env                    # Environment Variables (gitignored!)
-└── ...
-```
+- [§Unser Setup: 6 Artefakt-Typen](modus-operandi.md#unser-setup-6-artefakt-typen) — was jedes Dokument tut
+- [§Vollständige Dokument-Landschaft](modus-operandi.md#vollständige-dokument-landschaft) — Ordnerstruktur für Solo + Team
+- [§Projekt-Lebenszyklus](modus-operandi.md#projekt-lebenszyklus-wie-artefakte-zusammenarbeiten) — Flow: prd → architecture → backlog → concepts → Code → results
+- [§7 backlog.md](modus-operandi.md#7-backlogmd--feature-registry-mit-stabilen-ids-pro-projekt-optional) — stabile Feature-IDs statt lokaler F-Nummern
 
-> **Solo-Projekt?** Den `team/`-Ordner weglassen. **Team-Projekt?** Siehe Teil 8 für das Setup.
-
-### Wann welches Dokument?
-
-| Dokument | Wann erstellen? | Wann aktualisieren? |
-|----------|----------------|---------------------|
-| product.md | Vor dem ersten Code | Bei Scope-Änderungen |
-| architecture.md | Nach Stack-Entscheidung | Bei neuen Modulen/Services |
-| decisions.md | Ab Session 1 | Nach jeder Session |
-| CLAUDE.md | Vor dem ersten Code | Wenn neue Konventionen entstehen |
-| Konzepte | Vor komplexen Features | Einmalig (dann Implementierung) |
-| ADRs | Bei folgenreichen Entscheidungen | Selten (superseded/deprecated) |
-| Mission-Docs | Bei Team-Projekten: Tag 1 | Täglich (durch Mitarbeiter) |
-| Meeting-Notizen | Nach jedem Meeting | Einmalig (5 Min danach) |
-| Modus Operandi | Bei Team-Projekten: Tag 1 | Bei Prozess-Änderungen |
+**Faustregel für den Builder:** Vor jeder Session weiß die KI durch `CLAUDE.md` → `prd.md` → `architecture.md` → ggf. `backlog.md` und `docs/concepts/`, was zu tun ist. Nach jeder Session schreibst du `decisions.md` (Architektur-Entscheidungen) und ggf. `docs/results/[ID].md` (Post-Build-Lernen) zurück.
 
 ---
 
-## Teil 8: Vibe Coding im Team — Vom Solo-Projekt zur Teamarbeit
+## Teil 9: Vom Solo-Projekt zum Team
 
-### Das Problem: Solo-Workflow skaliert nicht
+Alles bis hierher funktioniert auch dann, wenn du allein mit Claude baust. Sobald ein zweiter Mensch dazukommt, kommen zwei Artefakt-Typen hinzu:
 
-Alles bis hierher funktioniert perfekt, wenn DU alleine mit Claude baust. Aber sobald ein zweiter Mensch dazukommt, reicht das nicht mehr:
-- Wer macht was gerade?
-- Woher weiß Claude, welchen Kontext Person B braucht?
-- Wie vermeidet man, dass zwei Leute dieselbe Architektur-Entscheidung unterschiedlich treffen?
+- **Mission-Dokument pro Person** (`docs/team/[name]-mission.md`) — Auftrag, Wochenplan, Blocker. Wird von Mensch und KI gelesen.
+- **Meeting-Notiz pro Meeting** (`docs/meetings/YYYY-MM-DD-thema.md`) — Entscheidungen + Action Items, 5 Min nach dem Meeting.
 
-### Die Lösung: AI-lesbares Betriebssystem
+`CLAUDE.md` verweist zusätzlich auf das Mission-Dokument, damit Claude weiß, was die Person gerade macht.
 
-Inspiriert von Dave Blundin (Link Ventures, Moonshots-Podcast EP #235): **Arbeit wird absichtlich so dokumentiert, dass sowohl Menschen als auch AI daraus Kontext ableiten können.** Das ist kein Tracking — es ist Klarheit.
-
-### Was sich ändert: 2 zusätzliche Artefakt-Typen
-
-Zu den Projekt-Dokumenten (CLAUDE.md, product.md, architecture.md, decisions.md) kommen:
-
-#### Mission-Dokument (pro Person)
-
-Jedes Teammitglied bekommt einen Einseiter in `docs/team/[name]-mission.md`:
-
-```markdown
-# Mission: [Name] — [Projekt]
-
-## Mein Auftrag
-1-3 Sätze: Was ist mein Ziel? Woran erkennt man Erfolg?
-
-## Aktuelle Phase
-Meilenstein | Deadline | Status
-
-## Wochenplan
-| Aufgabe | Deliverable | Status |
-
-## Blocker & Fragen
-Was ich alleine nicht lösen kann.
-
-## Entscheidungen (Log)
-Datum — Was — Wer — Warum
-```
-
-**Warum?**
-- Claude liest es automatisch → weiß was die Person gerade macht
-- Projektleitung scannt Status in 2 Minuten
-- Blocker-Liste = Meeting-Agenda → keine Vorbereitung nötig
-- Git-History zeigt, wann Status aktualisiert wurde
-
-#### Meeting-Notiz (pro Meeting)
-
-```markdown
-# Meeting: [Thema] | [Datum]
-
-## Entscheidungen
-- [Entscheidung] — Begründung — Verantwortlich — Frist
-
-## Action Items
-- [ ] [Was] — [Wer] — [Bis wann]
-```
-
-**Regel:** Kein Meeting ohne Ergebnis-Dokument. 5 Minuten danach, nicht mehr.
-
-### CLAUDE.md im Team-Kontext
-
-Im Solo-Projekt verweist CLAUDE.md auf deine Docs. Im Team verweist es zusätzlich auf die Mission-Dokumente:
-
-```markdown
-# CLAUDE.md
-
-## Team
-→ Lies docs/team/[name]-mission.md für aktuellen Status.
-
-## Was bauen wir?
-→ Lies docs/product.md
-
-## Architektur
-→ Lies docs/architecture.md
-```
-
-So weiß Claude bei jedem Start, wer was macht, und baut die richtige Sache für die richtige Person.
-
-### Team-Prinzipien
-
-1. **Artefakte > Meetings.** Wenn es nicht aufgeschrieben ist, existiert es nicht.
-2. **Output > Input.** Ergebnisse messen, nicht Stunden.
-3. **Zeigen > Erzählen.** Jedes Review beginnt mit einer Demo.
-4. **Claude ist Teammitglied.** AI nutzen ist gewünscht, keine Schwäche.
-5. **Kontext > Kontrolle.** Dokumentation für Klarheit, nicht Überwachung.
-
-### Weiterführend
-
-Für ein vollständiges Team-Setup mit Meeting-Rhythmus, Bewertungskriterien, Eskalationsregeln und Wochen-Workflow: Siehe das **[Modus Operandi](modus-operandi.md)**.
-
-### Hinweis: EU AI Act
-
-Dieses System ist Arbeitsdokumentation zur Koordination — **kein** Mitarbeitertracking. Keine automatische Überwachung von Arbeitszeiten, keine AI-basierte Leistungsbewertung, keine Emotionserkennung (seit Feb 2025 verboten). Status-Updates sind freiwillige, selbst-dokumentierte Artefakte.
+**Den vollen Team-Stack** (Meeting-Rhythmus, Bewertungskriterien, Eskalationsregeln, Wochen-Workflow, Kommunikations-Kanaltrennung, Bot-Integration, EU-AI-Act-konforme Bewertung) beschreibt der [**Modus Operandi**](modus-operandi.md) — er ist die Operating-Model-Schicht zu diesem Builder-Guide. Lies ihn, bevor du das zweite Teammitglied einlädst.
 
 ---
 
-## Teil 9: Fortgeschrittene Techniken
+## Teil 10: Fortgeschrittene Techniken
 
 ### Automatisierte Nacht-Audits
 
@@ -585,7 +519,7 @@ Claude Code unterstützt wiederverwendbare "Skills" — vorgefertigte Workflows 
 
 ---
 
-## Teil 10: Der typische Projektlebenszyklus
+## Teil 11: Der typische Projektlebenszyklus
 
 ### Woche 1-2: Foundation
 
@@ -621,7 +555,7 @@ Claude Code unterstützt wiederverwendbare "Skills" — vorgefertigte Workflows 
 
 ---
 
-## Teil 11: Checklisten
+## Teil 12: Checklisten
 
 ### Checkliste: Projekt starten
 
@@ -655,12 +589,14 @@ Claude Code unterstützt wiederverwendbare "Skills" — vorgefertigte Workflows 
 
 ---
 
-## Teil 12: Glossar
+## Teil 13: Glossar
 
 | Begriff | Erklärung |
 |---------|-----------|
-| **Vibe Coding** | Softwareentwicklung durch Beschreibung statt manuellem Code-Schreiben, mit KI als Implementierer |
-| **PRD** | Product Requirements Document — beschreibt Was und Warum eines Produkts |
+| **Building with AI** | Sammelbegriff für AI-natives Bauen — umfasst Vibe Coding und Agentic Coding |
+| **Vibe Coding** | Karpathys Begriff (Feb 2025) für schnelles, explorierendes Bauen mit KI — gut für Prototypen, nicht für Production-Software |
+| **Agentic Coding** | Strukturiertes Bauen mit AI-Agenten (Spec → Plan → Execute), Sprachraum Anthropic/Cursor 2025/2026 |
+| **PRD** | Product Requirements Document — beschreibt Was und Warum eines Produkts (Datei: `docs/prd.md`) |
 | **CLAUDE.md** | Projektkontext-Datei, die Claude automatisch liest |
 | **ADR** | Architecture Decision Record — formelle Dokumentation einer Architekturentscheidung |
 | **AI Slop** | Redundanter, unnötig komplexer Code, der sich durch wiederholte KI-Generierung ansammelt |

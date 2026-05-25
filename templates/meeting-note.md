@@ -7,6 +7,11 @@
 ## Entscheidungen
 - **[Entscheidung]** — Begründung: [Warum] — Verantwortlich: [Wer] — Frist: [Bis wann]
 
+## Feature-Wünsche
+<!-- Falls docs/backlog.md existiert: jeden Wunsch mit stabiler ID referenzieren, nie mehr lokal als F1/F2 durchnummerieren. Neue IDs direkt in backlog.md anlegen (Status: hypo). -->
+- **[XX-NNN] [Feature-Name]** — [Zitat/Kontext aus Meeting] — Status: hypo
+- **[XX-NNN] [Feature-Name]** — [Zitat/Kontext aus Meeting] — Status: validated
+
 ## Action Items
 - [ ] **[Wer]:** [Was] — bis [Datum]
 - [ ] **[Wer]:** [Was] — bis [Datum]

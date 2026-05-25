@@ -8,7 +8,7 @@ _Outcome-Tracking pro abgeschlossenem Feature. Schließt den Closed Loop zwische
 
 ## Sinn dieses Files
 
-`backlog.md` sagt **was geplant ist**, `decisions.md` sagt **warum gebaut wurde**, `product.md` sagt **wohin es geht**. Was fehlt: **Was tatsächlich passiert ist, nachdem das Feature live war.**
+`backlog.md` sagt **was geplant ist**, `decisions.md` sagt **warum gebaut wurde**, `prd.md` sagt **wohin es geht**. Was fehlt: **Was tatsächlich passiert ist, nachdem das Feature live war.**
 
 Ohne dieses File hast du keinen Lern-Mechanismus. Du baust, du shippst, du vergisst. Beim nächsten Feature wiederholst du Fehler, oder du wiederholst Patterns, die nicht gewirkt haben, weil niemand sie nachgezählt hat.
 
@@ -118,4 +118,4 @@ Wenn das Repo schon `docs/concepts/[ID]-*.md` für Plan-Files hat, ist `docs/res
 
 ---
 
-_Siehe auch: [modus-operandi.md §4c](../modus-operandi.md) — die Lern-Schicht zwischen Output und nächster Iteration._
+_Siehe auch: [modus-operandi.md §8](../modus-operandi.md) — die Lern-Schicht zwischen Output und nächster Iteration._

@@ -1,4 +1,6 @@
-# product.md — [Produktname]
+# PRD — [Produktname]
+
+_Product Requirements Document. Definiert WAS gebaut wird und WARUM. Vor erstem Code mit KI challengen (2-3 Runden)._
 
 _Stand: [Datum]_
 
@@ -17,35 +19,39 @@ _Stand: [Datum]_
 - [Was bauen wir bewusst NICHT?]
 - [Was ist eine Erweiterung für später?]
 
-## 5. Tech-Stack
+## 5. Tech-Stack (Kurzübersicht)
+
 | Komponente | Technologie | Begründung |
 |-----------|-------------|------------|
 | Framework | [z.B. Next.js] | [Warum?] |
 | Datenbank | [z.B. PostgreSQL] | [Warum?] |
 | Hosting | [z.B. Hetzner + Coolify] | [Warum?] |
 
-## 6. Kernfunktionen & Roadmap
+> Datenmodell, Ordnerstruktur und Konventionen gehören in `architecture.md`.
 
-### Phase 1: [Name] ([Zeitraum])
+## 6. Roadmap (Phasen-Narrative)
+
+Nur **Phasen-Themen** hier — keine Feature-Listen. Konkrete Features pro Phase stehen im [`backlog.md`](backlog.md) (Spalte `Phase`). Roadmap-Sicht = Backlog gefiltert nach Phase.
+
+### Phase 1: [Thema] ([Zeitraum])
 
 **Deadline: [Datum] — [Kontext zur Deadline]**
 
-| # | Feature | Beschreibung | Priorität |
-|---|---------|-------------|-----------|
-| 1 | **[Feature 1]** | [Kurzbeschreibung] | Hoch |
-| 2 | **[Feature 2]** | [Kurzbeschreibung] | Mittel |
+[2–4 Sätze: Welches Nutzer-Problem löst diese Phase? Wie sieht "Phase abgeschlossen" aus? Wofür ist sie die Grundlage?]
 
-#### Meilensteine
+**Meilensteine:**
 
 | Woche | KW | Meilenstein | Status |
 |-------|-----|-----------|--------|
 | 1 | XX | [Meilenstein] | ☐ |
 | 2 | XX | [Meilenstein] | ☐ |
 
-### Phase 2: [Name] ([Zeitraum])
-[Weitere Phasen nach gleichem Schema]
+### Phase 2: [Thema] ([Zeitraum])
+
+[2–4 Sätze nach gleichem Schema]
 
 ## 7. Erfolgskriterien
+
 - [ ] [Woran erkennt man, dass es funktioniert?]
 - [ ] [Messbare KPIs]
 
@@ -56,9 +62,10 @@ _Stand: [Datum]_
 | [Risiko 1] | [H/M/N] | [H/M/N] | [Maßnahme] |
 
 ## 9. Offene Fragen
+
 - [Was muss noch geklärt werden?]
 
 ---
 
 _Dieses PRD wurde von der KI challenged (Runde: [1/2/3]). Letzte Überarbeitung: [Datum]._
-_Wird bei jedem Review aktualisiert (Meilensteine + Status)._
+_Wird selten aktualisiert — nur bei Scope-Änderungen. Meilenstein-Status wird bei Reviews mitgeführt._

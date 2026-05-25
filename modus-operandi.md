@@ -1,6 +1,6 @@
 # Modus Operandi — AI-lesbares Betriebssystem für Teams
 
-_Stand: März 2026 | Jacek Zawisza_
+_Stand: 25. Mai 2026 | Jacek Zawisza_
 
 ---
 
@@ -63,39 +63,9 @@ Für Teams die Claude Code intensiv nutzen: Das **Teams-Dashboard** (`claude.ai/
 
 ---
 
-## Unser Setup: 6 Artefakt-Typen
+## Unser Setup: Die Artefakte
 
-Inspiriert von Blundins Ansatz, kombiniert mit dem [Vibe Coding Guide](vibe-coding-guide.md) für die technischen Artefakte. Die Team-Ebene ergänzt die Projekt-Ebene — beides zusammen ergibt das AI-lesbare Betriebssystem.
-
-### 0. Security-Review (regelmäßig)
-
-**Was:** Systematische Sicherheitsprüfung der Codebase mit Claude Code.
-**Befehl:** `/security-review` in Claude Code
-**Frequenz:** Alle 2-4 Wochen oder vor jedem größeren Release
-**Output:** Liste von Schwachstellen mit Priorisierung und Fix-Empfehlungen
-**Dokumentation:** Ergebnisse in `docs/audit/security-YYYY-MM-DD.md` speichern
-
-> Siehe [Vibe Coding Guide](vibe-coding-guide.md#falle-5-security-vernachlässigen) für Details.
-
-### 0b. Secrets & Zugangsdaten — Niemals in KI-Konversationen teilen
-
-**Regel:** API-Keys, Passwörter, Tokens und andere Geheimnisse dürfen **niemals** in Konversationen mit KI-Modellen (Claude, ChatGPT, Copilot, etc.) geteilt werden.
-
-**Warum:**
-- KI-Konversationen können in Logs, Trainingsdaten oder Cloud-Speicher landen
-- Auch bei "privaten" Sessions gibt es keine Garantie, dass der Inhalt nicht gespeichert wird
-- Ein einmal geteiltes Secret ist als kompromittiert zu betrachten
-
-**Wenn es doch passiert ist:**
-1. **Sofort den Key/das Passwort rotieren** — nicht "irgendwann", sondern jetzt
-2. Neuen Key generieren und sicher ablegen (`.env`, Passwort-Manager, etc.)
-3. Prüfen ob der alte Key in Git-History gelandet ist → ggf. `git filter-branch` oder BFG Repo-Cleaner
-
-**Best Practices:**
-- Secrets gehören in `.env`-Dateien (gitignored) oder Passwort-Manager (1Password, Bitwarden)
-- In KI-Konversationen stattdessen Platzhalter verwenden: `$API_KEY`, `<your-token-here>`
-- `.env.example` mit Platzhaltern ins Repo committen, nie `.env` selbst
-- Bei Code-Reviews: Auf hardcodierte Secrets prüfen (Teil des Security-Reviews)
+Inspiriert von Blundins Ansatz, kombiniert mit dem [Builder-Guide](building-with-ai.md) für die technischen Artefakte. Die Team-Ebene ergänzt die Projekt-Ebene — beides zusammen ergibt das AI-lesbare Betriebssystem. Sicherheits- und Audit-Praktiken (kein Artefakt im engeren Sinn) stehen in [§Regelmäßige Audits & Sicherheit](#regelmäßige-audits--sicherheit).
 
 ### 1. Mission-Dokument (pro Person)
 
@@ -163,7 +133,7 @@ Datum — Was — Wer — Warum
 - Entscheidungen werden nachvollziehbar (wann, wer, warum)
 - Weniger "das haben wir doch besprochen" — es steht geschrieben
 
-### 2b. Meeting-Transkripte
+### 3. Meeting-Transkripte
 
 **Was:** Vollständige Aufnahme + Transkription von Meetings als Rohmaterial.
 **Wo:** `docs/meetings/transcripts/YYYY-MM-DD-thema.md`
@@ -201,18 +171,31 @@ Datum — Was — Wer — Warum
 - **Kunden-/Stakeholder-Meeting:** Zusammenfassung ins Repo (Kundenwünsche = wichtig)
 - **Ad-hoc Calls:** Nur Notiz, nur wenn eine Entscheidung fiel
 
-### 2c. INBOX.md — Brücke zwischen Meetings und Code-Sessions
+### 4. INBOX.md — Append-Only-Briefkasten (Team-Tool, Solo-optional)
 
-**Was:** Eine Datei im Repo, die offene Änderungen aus Meetings sammelt, die noch in die Projekt-Docs übernommen werden müssen.
+**Was:** Eine append-only Datei, in die mehrere Personen parallel offene Änderungen aus Meetings reinwerfen können, ohne sich gegenseitig zu blockieren.
 **Wo:** `docs/INBOX.md`
-**Wer schreibt rein:** Projektleitung oder Bot (nach Meeting-Destillation)
-**Wer arbeitet ab:** Teammitglieder (beim nächsten Session-Abschluss)
-**Wer liest mit:** Claude (beim Session-Start)
+**Wer schreibt rein:** Wer ein Meeting destilliert (Mensch oder Bot)
+**Wer arbeitet ab:** Wer den nächsten Doc-Commit macht (nimmt fresh state aus `git pull`)
+**Wer liest mit:** Claude (beim Session-Start + beim Pre-Commit-Check)
 
 > Vorlage: [templates/inbox.md](templates/inbox.md)
 
-**Warum?**
-Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (neue Entscheidungen → `decisions.md`, neue Aufgaben → Aufgabenplan, Feature-Anforderungen → `product.md`). Statt direkt in diese Docs zu schreiben (Merge-Konflikt-Risiko mit laufenden Claude-Sessions), wird alles in `INBOX.md` gesammelt.
+**Warum INBOX statt direkt in Ziel-Docs?**
+
+Echtes Problem: **konkurrierende parallele Doc-Edits**. Wenn Person A gerade an `decisions.md` arbeitet (z.B. eine Entscheidung anhängt) und Person B *gleichzeitig* aus einem Meeting eine andere Entscheidung in `decisions.md` einträgt, fasst Git beim Push die beiden EOF-Anhänge ungern auto-merge. Das gilt auch für `backlog.md` (Tabellenzeilen).
+
+INBOX löst das durch **Append-Only-Disziplin**: Jeder hängt einen neuen Datums-Block ans Ende. Mehrere Personen können parallel schreiben — Git mergt das fast immer automatisch, weil jeder seinen eigenen Block hat. Die Curate-in-Ziel-Doc-Arbeit passiert später von der Person mit fresh state (nach `git pull`).
+
+**Wann lohnt sich INBOX?**
+
+| Setup | INBOX nutzen? | Warum |
+|---|---|---|
+| **Team, mehrere pflegen Docs** | **Ja, Pflicht** | Append-Only-Konfliktvermeidung |
+| **Solo + mehrere parallele Worktrees/Maschinen** | Ja, sinnvoll | Gleiches Konflikt-Risiko wie Team |
+| **Solo, sequenziell** | Nein, überspringen | Du destillierst und sortierst in einem Rutsch direkt in Ziel-Docs |
+
+Default für Solo-Projekte: keine INBOX.md anlegen. Erst einführen, wenn du merkst, dass parallele Doc-Edits zu Konflikten führen.
 
 **Format:**
 ```markdown
@@ -220,43 +203,60 @@ Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (n
 
 ## 2026-03-26 — Jour fixe
 - [ ] decisions.md: Feature X ergänzen
-- [ ] aufgaben.md: Neue Aufgabe Y
-- [ ] product.md: Anforderung Z dokumentieren
+- [ ] backlog.md: FW-019 als hypo aufnehmen
+- [ ] prd.md: Scope-Änderung Z dokumentieren
 → Quelle: docs/meetings/2026-03-26-jourfixe.md
 ```
 
 **Workflow:**
-1. Nach Meeting: INBOX.md mit offenen Punkten aktualisieren
-2. Optional: Heads-up im Team-Kanal ("INBOX.md hat offene Punkte")
-3. Bei der nächsten Claude-Session: Session-Abschluss übernimmt die Punkte
-4. Erledigte Einträge werden aus INBOX.md gelöscht
+1. Nach Meeting: neuen Datums-Block ans Ende von `INBOX.md` anhängen
+2. Optional: Heads-up im Team-Kanal ("INBOX hat offene Punkte")
+3. Pre-Commit-Check (siehe unten): wer als nächstes committet, arbeitet die INBOX in die Ziel-Docs ein — mit fresh state nach `git pull`
+4. Erledigte Einträge aus INBOX.md löschen (im selben Commit)
 
-**Regel:** `INBOX.md` leer = alles synchron. Nicht leer = es gibt Nachholbedarf.
+**Regel:** `INBOX.md` leer = alles synchron. Nicht leer = der nächste Commit sollte sie adressieren oder bewusst stehenlassen.
 
-### 3. Architektur-Dokument (pro Projekt)
+#### Pre-Commit-Check: INBOX prüfen, bevor du committest
+
+Wenn `docs/INBOX.md` im Projekt existiert, gehört vor jeden Commit ein kurzer INBOX-Check:
+
+1. **Ist die INBOX leer?** → committen, fertig.
+2. **Nicht leer?** → Entscheidung:
+   - **Einarbeiten:** Punkte in Ziel-Docs übernehmen, erledigte Einträge aus INBOX.md löschen, alles im selben Commit. Vorher `git pull`, um fresh state zu haben.
+   - **Bewusst stehenlassen:** WIP-Commit, andere/r Punkt(e) bleiben für späteren Commit. Im Commit-Body kurz vermerken: `INBOX hat N offene Punkte stehenlassen — nicht relevant für diesen Commit`.
+
+Claude soll das als sanften Warnhinweis machen, nicht als Block: *"INBOX hat 3 Punkte. Einarbeiten oder stehenlassen?"* — der Mensch entscheidet.
+
+**Warum Pre-Commit, nicht Pre-Push?** Jeder Commit sollte ein konsistenter Stand sein. Solo-Workflows ohne Push profitieren ebenso. Bei kombiniertem `commitpush` läuft der Check automatisch einmal vor dem Push (weil ja der Commit-Schritt davor läuft).
+
+### 5. Architektur-Dokument (pro Projekt)
 
 **Was:** Technische Wahrheit des Projekts. Datenmodell, Seitenstruktur, Stack, Entscheidungen.
 **Wo:** `docs/architecture.md`
 **Wer aktualisiert:** Wer Architektur-Entscheidungen trifft
 **Wird gelesen von:** Claude (automatisch), Team-Mitglieder
 
-### 4. product.md / PRD (pro Projekt)
+### 6. prd.md — Product Requirements Document (pro Projekt)
 
-**Was:** Das Product Requirements Document — definiert WAS gebaut wird, WARUM und WANN. Enthält auch die Roadmap mit Meilensteinen und Status-Tracking.
-**Wo:** `docs/product.md`
-**Wer erstellt:** Projektleitung, idealerweise vor Projektstart
-**Wer aktualisiert:** Nach jeder Session (Meilensteine) + bei Scope-Änderungen (Features)
-**Enthält:** Problem, Zielgruppe, Kernfunktionen mit Phasen/Meilensteinen, Nicht-Ziele, Tech-Stack, Erfolgskriterien, Risiken
+**Was:** PRD = **Product Requirements Document**. Definiert WAS gebaut wird und WARUM. Plus grobe Phasen-Narrative (Roadmap-Schicht) — **keine** konkrete Feature-Liste, die lebt in `backlog.md` (mit `Phase`-Spalte für die Roadmap-Sicht).
+**Wo:** `docs/prd.md`
+**Wer erstellt:** Projektleitung, vor erstem Code, von KI gechallenged (2–3 Runden)
+**Wer aktualisiert:** Selten — nur bei Scope-Änderungen. Meilenstein-Status wird bei Reviews mitgeführt.
+**Enthält:** Problem, Zielgruppe, Produktvision, Nicht-Ziele, Tech-Stack-Übersicht, Phasen-Narrative + Meilensteine, Erfolgskriterien, Risiken, Offene Fragen.
 
-> Vorlage: [templates/product.md](templates/product.md)
+> Vorlage: [templates/prd.md](templates/prd.md)
 
-**Warum PRD + Roadmap in einem Dokument?** Bei Solo- und Kleinteam-Projekten entscheidet dieselbe Person WAS und WANN gebaut wird. Zwei getrennte Dokumente (product.md + roadmap.md) verdoppeln den Pflegeaufwand ohne Mehrwert. Features sind nach Phasen priorisiert — das "Wann" ist direkt an das "Was" gekoppelt.
+**Warum PRD ohne Feature-Liste, dafür Backlog mit Phase-Spalte?** PRD ist strategisch und stabil. Features ändern sich häufig (entstehen aus Meetings, werden validiert, in Arbeit, fertig, gekillt). Beides in einem Dokument zu pflegen erzeugt Doppelpflege oder Drift. Klare Trennung:
 
-> **Hinweis:** Bei größeren Teams (>5 Personen), wo Produkt-Scope und Timeline von verschiedenen Rollen gemanagt werden, kann eine separate `roadmap.md` sinnvoll sein.
+- **PRD** = WAS/WARUM + grobe Phasen-Themen (selten geändert)
+- **Backlog** = Features mit ID, Phase, Status (operativ, oft geändert)
+- **Roadmap-Sicht** = Backlog gefiltert nach Phase — keine eigene `roadmap.md` nötig
 
-**Aus dem Vibe Coding Guide:** Vor der Umsetzung das PRD von der KI challengen lassen (2-3 Runden). Die KI deckt Lücken auf.
+> **Hinweis:** Bei größeren Teams (>5 Personen), wo Produkt-Scope und Timeline von verschiedenen Rollen gemanagt werden, kann eine separate `roadmap.md` sinnvoll werden — meist ist das ein Signal, dass das PRD zu schwer geworden ist.
 
-### 4b. backlog.md — Feature-Registry mit stabilen IDs (pro Projekt, optional)
+**Vor der Umsetzung das PRD von der KI challengen lassen** (2-3 Runden). Die KI deckt Lücken auf. Details zum PRD-Prozess: siehe [Builder-Guide](building-with-ai.md), Specification Engineering.
+
+### 7. backlog.md — Feature-Registry mit stabilen IDs (pro Projekt, optional)
 
 **Was:** Zentrale Feature-Liste mit **stabilen IDs**. Jedes Feature — Idee aus Meeting, validierte Hypothese, in Arbeit, fertig oder verworfen — hat genau eine ID. Nummer wird **nie** wiederverwendet.
 
@@ -302,11 +302,11 @@ _Stabile Feature-IDs. Nicht umnummerieren. Killed-IDs bleiben killed._
 | FW-003 | Kunden-Specific Aliase | killed | meetings/2026-04-14-X.md | Zu teuer für Phase 1 |
 ```
 
-**Verhältnis zu product.md:**
-- **product.md** bleibt strategisches PRD: Phasen, Meilensteine, Erfolgskriterien, Risiken.
-- **backlog.md** ist die flache operative Feature-Liste mit IDs und aktuellem Status.
-- In product.md-Tabellen referenzierst du per ID: "Phase 1 umfasst FW-002, FW-003, FW-004".
-- Kein Widerspruch zur Regel "PRD + Roadmap in einem Dokument" — die Roadmap (WANN) bleibt in product.md. Der Backlog zählt nur die Items und ihren Status, nicht die Zeitachse.
+**Verhältnis zu prd.md:**
+- **prd.md** bleibt strategisches Dokument: Phasen-Narrative, Meilensteine, Erfolgskriterien, Risiken — keine Feature-Liste.
+- **backlog.md** ist die operative Feature-Liste mit IDs, `Phase`-Spalte und Status.
+- Die `Phase`-Spalte im Backlog koppelt jedes Feature an eine PRD-Phase. Roadmap-Sicht = Backlog gefiltert nach Phase.
+- Damit gibt es keine doppelte Feature-Liste und keinen Drift zwischen PRD und Backlog.
 
 **Verhältnis zu Meeting-Notes:**
 - Feature-Wunsch im Meeting → direkt nächste freie ID vergeben, in backlog.md eintragen, in Meeting-Note mit `[FW-NNN]` referenzieren.
@@ -319,9 +319,9 @@ _Stabile Feature-IDs. Nicht umnummerieren. Killed-IDs bleiben killed._
 **Verhältnis zu decisions.md:**
 - Wenn ein Feature verworfen wird (`killed`), gehört die Begründung ins decisions.md (Kontext, Alternativen, Konsequenzen). Der Backlog-Eintrag referenziert die Entscheidung per Datum.
 
-**Kleinprojekt-Ausnahme:** Für ein Projekt mit < 10 Features in einer Phase reicht product.md allein (die Features-Tabelle dort macht den Job). Backlog ab ca. 15+ Features sinnvoll — oder spätestens, wenn das "welche F-Nummer war was?"-Problem auftritt.
+**Kleinprojekt-Ausnahme:** Für ein Projekt mit < 10 Features reicht `prd.md` allein — Features in den Phasen-Narratives als Aufzählung erwähnen, kein eigener Backlog nötig. Backlog ab ca. 15+ Features sinnvoll — oder spätestens, wenn das "welche F-Nummer war was?"-Problem auftritt oder echtes Status-Tracking (hypo → validated → in-progress → done) gebraucht wird.
 
-### 4c. results.md — Lern-Schicht pro Feature (pro Projekt)
+### 8. results.md — Lern-Schicht pro Feature (pro Projekt)
 
 **Was:** Outcome-Notiz pro abgeschlossenem Feature. Schließt den Closed Loop zwischen „was war geplant" (Plan-File / Konzept) und „was funktioniert in echt" (Realität bei Nutzern).
 
@@ -340,7 +340,7 @@ _Stabile Feature-IDs. Nicht umnummerieren. Killed-IDs bleiben killed._
 
 **Warum diese Schicht?**
 
-`backlog.md` sagt **was geplant ist**, `decisions.md` sagt **warum gebaut wurde**, `product.md` sagt **wohin es geht**. Was bislang fehlt: **was nach dem Live-Gehen tatsächlich passiert ist.**
+`backlog.md` sagt **was geplant ist**, `decisions.md` sagt **warum gebaut wurde**, `prd.md` sagt **wohin es geht**. Was bislang fehlt: **was nach dem Live-Gehen tatsächlich passiert ist.**
 
 Ohne Lern-Schicht:
 - Du baust, shippst, vergisst — beim nächsten Feature wiederholst du dieselben Annahmen
@@ -404,7 +404,7 @@ Wann diese Automation sinnvoll ist: ab ~5 ungeschriebenen Results in einem Monat
 
 `results.md`-Einträge sind **kurze, ehrliche Outcome-Notizen für dich selbst und für zukünftige AI-Co-Piloten**, die sie als Kontext für neue Feature-Vorschläge nutzen.
 
-### 5. decisions.md (pro Projekt)
+### 9. decisions.md (pro Projekt)
 
 **Was:** Chronologisches Log aller Architektur- und Produktentscheidungen auf Projekt-Level.
 **Wo:** `docs/decisions.md`
@@ -431,7 +431,7 @@ Was haben wir entschieden?
 
 **Unterschied zu Entscheidungen im Mission-Dokument:** Mission-Doc = persönliche/aufgabenbezogene Entscheidungen ("Ich habe X so gelöst"). decisions.md = Projekt-Architektur ("Wir nutzen PostgreSQL weil..."). Claude liest beides.
 
-### 6. CLAUDE.md (pro Projekt)
+### 10. CLAUDE.md (pro Projekt)
 
 **Was:** Das "Briefing" für Claude. Projektkontext, Team, Stack, Standards, Verweise auf andere Artefakte.
 **Wo:** Repository-Root
@@ -453,7 +453,7 @@ TT.MM.JJJJ — Kontext zur Deadline.
 → Lies docs/team/[name]-mission.md für aktuellen Status.
 
 ## Was bauen wir?
-→ Lies docs/product.md (PRD)
+→ Lies docs/prd.md (Product Requirements Document)
 
 ## Tech-Stack + Standards
 → Lies docs/architecture.md
@@ -482,12 +482,12 @@ dein-projekt/
 ├── CLAUDE.md                        # AI-Briefing (< 200 Zeilen)
 │
 ├── docs/
-│   ├── INBOX.md                     # Offene Änderungen aus Meetings
-│   ├── product.md                   # PRD — Was und Warum
+│   ├── prd.md                       # Product Requirements Document — Was und Warum
 │   ├── backlog.md                   # Feature-Registry mit stabilen IDs (optional, ab ~15 Features)
 │   ├── architecture.md              # Stack, Datenmodell, Seitenstruktur
 │   ├── decisions.md                 # Architektur-Entscheidungen (chronologisch)
 │   ├── modus-operandi.md            # Dieses Dokument (projektspezifische Version)
+│   │                                # INBOX.md nur, wenn parallele Doc-Edits zu Konflikten führen
 │   │
 │   ├── meetings/                    # Kundenmeetings, Stakeholder-Calls
 │   │   ├── YYYY-MM-DD-*.md          # Destillierte Notizen
@@ -505,8 +505,8 @@ dein-projekt/
 ├── CLAUDE.md                        # AI-Briefing (< 200 Zeilen)
 │
 ├── docs/
-│   ├── INBOX.md                     # Offene Änderungen aus Meetings
-│   ├── product.md                   # PRD — Was und Warum
+│   ├── INBOX.md                     # Append-Only-Briefkasten für parallele Doc-Edits
+│   ├── prd.md                       # Product Requirements Document — Was und Warum
 │   ├── backlog.md                   # Feature-Registry mit stabilen IDs (optional, ab ~15 Features)
 │   ├── architecture.md              # Stack, Datenmodell, Seitenstruktur
 │   ├── decisions.md                 # Architektur-Entscheidungen (chronologisch)
@@ -533,12 +533,42 @@ dein-projekt/
 
 ---
 
+## Projekt-Lebenszyklus: Wie Artefakte zusammenarbeiten
+
+Die Artefakte oben sind nicht beliebig — sie haben eine Reihenfolge. Ein neues Feature fließt von der ersten Idee bis zum Lern-Eintrag durch dieselbe Kette:
+
+```
+prd.md  →  architecture.md  →  backlog.md  →  docs/concepts/  →  Implementation  →  docs/results/[ID].md
+(WAS +     (WIE bauen           (WELCHE         (WIE konkret      (Code +              (WAS ist
+ WARUM)     wir es?)             Features?       aussehen?)        decisions.md         passiert?)
+                                 Status)                           + Commit)
+```
+
+| Phase | Dokument | Wann entsteht | Wann aktualisiert | Wer |
+|---|---|---|---|---|
+| **Setup** | `prd.md` | Vor erstem Code, von KI gechallenged | Bei Scope-Änderungen (selten) | Projektleitung |
+| **Setup** | `architecture.md` | Nach PRD-Freigabe | Bei Stack-Wechsel oder neuen Modulen | Wer Arch entscheidet |
+| **Operativ** | `backlog.md` | Sobald Features aus mehreren Quellen kommen (~15+) | Bei jeder Status-Änderung eines Features | Projektleitung / Meeting-Destiller |
+| **Pre-Build** | `docs/concepts/[feature].md` | Vor komplexen Features (nicht jedem) | Einmalig (dann Implementation) | Wer Feature konzipiert |
+| **Build** | `decisions.md`, Code, Tests, Commits | Während Session | Pro Session, am Ende | Builder |
+| **Post-Build** | `docs/results/[ID].md` | 1–7 Tage nach Go-Live | Einmalig, ggf. Status-Update bei neuen Daten | Builder |
+
+**Lesehilfen:**
+- **`prd.md`** ist die strategische Konstante. Es ändert sich selten und ist Ausgangspunkt für alles andere.
+- **`backlog.md`** ist die operative Achse. Hier lebt der Status. Filter nach `Phase` = Roadmap-Sicht.
+- **`docs/concepts/`** ist optional — nur für Features, die Vor-Design brauchen. Triviale Features springen direkt von Backlog zu Implementation.
+- **`docs/results/`** schließt den Lern-Loop. Ohne diese Schicht baust du blind weiter. Mit ihr werden Patterns über mehrere Features sichtbar.
+
+**Was nicht in diese Kette gehört:** Mission-Dokumente (`docs/team/[name]-mission.md`) und Meeting-Notizen (`docs/meetings/`) laufen quer dazu — sie sind die Koordinations-Schicht zwischen Menschen, nicht die Bau-Schicht des Produkts.
+
+---
+
 ## Wie es zusammenspielt
 
 ```
 # Solo-Projekt:
 CLAUDE.md (Einstieg)
-   ├── docs/product.md (WAS bauen wir? Strategisch)
+   ├── docs/prd.md (WAS bauen wir? Strategisch)
    ├── docs/backlog.md (WELCHE Features? Stabile IDs, Status)
    ├── docs/architecture.md (WIE bauen wir es?)
    ├── docs/modus-operandi.md (WIE arbeiten wir?)
@@ -546,7 +576,7 @@ CLAUDE.md (Einstieg)
 
 # Team-Projekt:
 CLAUDE.md (Einstieg)
-   ├── docs/product.md (WAS bauen wir? Strategisch)
+   ├── docs/prd.md (WAS bauen wir? Strategisch)
    ├── docs/backlog.md (WELCHE Features? Stabile IDs, Status)
    ├── docs/architecture.md (WIE bauen wir es?)
    ├── docs/team/[name]-mission.md (WER macht WAS gerade?)
@@ -602,7 +632,7 @@ Action Items → neuer Wochenplan
 
 ---
 
-## Session-Workflow (aus dem Vibe Coding Guide)
+## Session-Workflow (aus dem Builder-Guide)
 
 Jede Coding-Session folgt dem gleichen 5-Schritt-Muster:
 
@@ -628,38 +658,55 @@ Jede Coding-Session folgt dem gleichen 5-Schritt-Muster:
    → Tests grün?
    → decisions.md aktualisiert (wenn Architektur-Entscheidung)?
    → Mission-Dokument: [x] bei erledigten Aufgaben?
-   → Sauberer Commit (feat: / fix: / refactor:)?
    → Ggf. CLAUDE.md um neue Konventionen ergänzt?
-   → INBOX.md abgearbeitet? (offene Meeting-Punkte übernommen?)
+   → Pre-Commit-Check: INBOX.md prüfen (falls vorhanden) — siehe §4
+   → Sauberer Commit (feat: / fix: / refactor:)
 ```
 
-**Raycast-Snippets** (empfohlen — einmal einrichten, immer gleicher Workflow):
+### Empfohlene Slash-Commands
 
-**Session-Start** (Kürzel: `;;start`):
-```
-Ich möchte ein neues Feature umsetzen: {cursor}
+Statt jeden Session-Workflow manuell zu tippen: drei wiederkehrende Workflows als Claude-Code-Slash-Commands abbilden. Die folgenden Beschreibungen sind die **Spec** (was der Skill tun soll), nicht der fertige Skill. Implementiert sie in eurem eigenen Setup unter `~/.claude/commands/[name].md` (global, für alle Projekte) oder `.claude/commands/[name].md` (projektspezifisch).
 
-Bitte lies zuerst CLAUDE.md für Projektkonventionen, dann docs/INBOX.md für offene Meeting-Punkte. Schau dir danach die relevanten bestehenden Dateien an, um zu verstehen, wie die App aktuell aufgebaut ist. Erstelle dann einen Implementierungsplan mit betroffenen Dateien (neu + bestehend), API-Endpoints (falls nötig) und einer groben Reihenfolge der Schritte. Bitte noch nichts umsetzen — wir besprechen den Plan erst.
-```
+#### `/session-start` — Kontext laden + Plan erstellen
 
-**Session-Ende** (Kürzel: `;;end`):
+**Was der Skill tun soll:**
+1. CLAUDE.md lesen (Projektkonventionen)
+2. `docs/INBOX.md` lesen, falls vorhanden (offene Übergaben aus Meetings)
+3. Relevante bestehende Dateien für die anstehende Aufgabe lesen
+4. Implementierungsplan erstellen: betroffene Dateien (neu + bestehend), API-Endpoints falls nötig, grobe Reihenfolge
+5. **Noch nicht implementieren** — erst Plan-Review
+
+**Beispiel-Prompt-Template (für Skill-Body):**
 ```
-Bitte Session abschließen:
-1. Aktualisiere alle relevanten Dateien in docs/ mit den Änderungen dieser Session
-   (z.B. architecture.md, decisions.md, product.md, Konzepte)
-2. Wenn docs/backlog.md existiert: Status aller berührten Feature-IDs aktualisieren
-   (hypo → validated → in-progress → done / killed). Neu entstandene Feature-Ideen
-   mit nächster freier ID eintragen.
-3. Aktualisiere Aufgaben- und Mission-Dokumente (erledigte Tasks [x], neue Tasks)
-4. Prüfe docs/INBOX.md — wenn offene Punkte existieren, arbeite sie in die
-   jeweiligen Docs ein und lösche die erledigten Einträge aus INBOX.md
-5. Aktualisiere CLAUDE.md, falls sich Konventionen oder die Projektstruktur geändert haben
-6. Gib mir eine Commit-Message (Conventional Commits, Deutsch) — falls backlog.md
-   existiert, die Feature-ID im Message einbinden (z.B. "feat: FW-007 ..."). Aber
-   committe nicht selbst.
+Ich möchte ein neues Feature umsetzen: $ARGUMENTS
+
+Lies zuerst CLAUDE.md, dann docs/INBOX.md (falls vorhanden), dann die
+relevanten bestehenden Dateien. Erstelle einen Implementierungsplan mit
+betroffenen Dateien, API-Endpoints und Reihenfolge. Noch nichts umsetzen —
+Plan zuerst.
 ```
 
-**Einrichtung:** Raycast → Extensions → Snippets → Create Snippet → Name + Keyword + Text einfügen. `{cursor}` markiert die Cursor-Position nach dem Einfügen.
+#### `/session-end` — Doku-Sync + Commit-Message
+
+**Was der Skill tun soll:**
+1. Alle berührten Dateien in `docs/` aktualisieren (architecture.md, decisions.md, prd.md, Konzepte)
+2. Wenn `docs/backlog.md` existiert: Status aller berührten Feature-IDs aktualisieren (hypo → validated → in-progress → done / killed); neue Features mit nächster freier ID anlegen
+3. Aufgaben- und Mission-Dokumente: erledigte Tasks `[x]`, neue Tasks ergänzen
+4. CLAUDE.md aktualisieren, falls neue Konventionen oder Projektstruktur-Änderungen
+5. Commit-Message vorschlagen (Conventional Commits, mit Feature-ID falls Backlog existiert) — **aber nicht selbst committen**, das macht `/commitpush`
+
+#### `/commitpush` (oder `/commit`) — Pre-Commit-Check + Commit + ggf. Push
+
+**Was der Skill tun soll — Pflicht-Schritte:**
+
+1. **INBOX-Check** (wenn `docs/INBOX.md` existiert): nicht leer → kurzer Warnhinweis, User entscheidet ob einarbeiten (mit `git pull` für fresh state) oder bewusst stehenlassen. Stehenlassen wird im Commit-Body vermerkt.
+2. **Conventional-Commit-Message** vorschlagen (mit Feature-ID falls Backlog vorhanden, z.B. `feat: FW-007 …`).
+3. Commit erstellen.
+4. Bei `/commitpush`: anschließend pushen. Bei `/commit`: nicht pushen.
+
+**Anti-Pattern:** Der Skill sollte **nicht** automatisch decisions.md, prd.md oder andere Docs ändern — das ist Aufgabe von `/session-end`. Der commit-Skill ist nur für Commit-Erzeugung, nicht für Doc-Sync.
+
+---
 
 **Warum Planen vor Coden?** Claude springt gerne direkt in die Implementierung. Das führt zu Code, der das falsche Problem löst. Erst planen, dann bauen.
 
@@ -689,7 +736,21 @@ Bitte Session abschließen:
 
 ---
 
-## Codebase-Audits (alle 2 Wochen)
+## Regelmäßige Audits & Sicherheit
+
+Drei wiederkehrende Praktiken zur Codebase-Hygiene. Anders als die Artefakte oben sind das keine Dokumente, die gepflegt werden, sondern Jobs, die regelmäßig laufen — mit Output in `docs/audit/`.
+
+### Security-Review (alle 2–4 Wochen)
+
+**Was:** Systematische Sicherheitsprüfung der Codebase mit Claude Code.
+**Befehl:** `/security-review` in Claude Code
+**Frequenz:** Alle 2-4 Wochen oder vor jedem größeren Release
+**Output:** Liste von Schwachstellen mit Priorisierung und Fix-Empfehlungen
+**Dokumentation:** Ergebnisse in `docs/audit/security-YYYY-MM-DD.md` speichern
+
+> Siehe [Builder-Guide](building-with-ai.md#falle-5-security-vernachlässigen) für Details.
+
+### Codebase-Audit (alle 2 Wochen)
 
 Im Arbeitstermin, alle 2 Wochen:
 
@@ -701,6 +762,26 @@ Erstelle einen Bericht in docs/audit/YYYY-MM-DD.md"
 ```
 
 Ergebnis: Bericht in `docs/audit/`. Gefundene Issues werden zu Aufgaben im Wochenplan.
+
+### Secrets-Hygiene (immer)
+
+**Regel:** API-Keys, Passwörter, Tokens und andere Geheimnisse dürfen **niemals** in Konversationen mit KI-Modellen (Claude, ChatGPT, Copilot, etc.) geteilt werden.
+
+**Warum:**
+- KI-Konversationen können in Logs, Trainingsdaten oder Cloud-Speicher landen
+- Auch bei "privaten" Sessions gibt es keine Garantie, dass der Inhalt nicht gespeichert wird
+- Ein einmal geteiltes Secret ist als kompromittiert zu betrachten
+
+**Wenn es doch passiert ist:**
+1. **Sofort den Key/das Passwort rotieren** — nicht "irgendwann", sondern jetzt
+2. Neuen Key generieren und sicher ablegen (`.env`, Passwort-Manager, etc.)
+3. Prüfen ob der alte Key in Git-History gelandet ist → ggf. `git filter-branch` oder BFG Repo-Cleaner
+
+**Best Practices:**
+- Secrets gehören in `.env`-Dateien (gitignored) oder Passwort-Manager (1Password, Bitwarden)
+- In KI-Konversationen stattdessen Platzhalter verwenden: `$API_KEY`, `<your-token-here>`
+- `.env.example` mit Platzhaltern ins Repo committen, nie `.env` selbst
+- Bei Code-Reviews: Auf hardcodierte Secrets prüfen (Teil des Security-Reviews)
 
 ---
 
@@ -792,22 +873,24 @@ Ein Projekt-Bot im Team-Kanal kann als **Kommunikations-Hub** dienen — kein zw
 ### Solo-Projekt
 
 1. `CLAUDE.md` im Repo-Root erstellen (Vorlage: [templates/CLAUDE.md](templates/CLAUDE.md))
-2. `docs/product.md` erstellen (Vorlage: [templates/product.md](templates/product.md))
+2. `docs/prd.md` erstellen (Vorlage: [templates/prd.md](templates/prd.md))
 3. `docs/decisions.md` erstellen (Vorlage: [templates/decisions.md](templates/decisions.md))
 4. `docs/meetings/` Ordner erstellen (für Kundenmeetings)
 5. `docs/modus-operandi.md` — projektspezifische Version dieses Dokuments
 6. _Optional (ab ~15 Features oder mehreren Feature-Quellen):_ `docs/backlog.md` erstellen (Vorlage: [templates/backlog.md](templates/backlog.md))
+7. _Optional (nur bei parallelen Worktrees / mehreren Maschinen):_ `docs/INBOX.md` erstellen (Vorlage: [templates/inbox.md](templates/inbox.md))
 
 ### Team-Projekt
 
 1. `CLAUDE.md` im Repo-Root erstellen (Vorlage: [templates/CLAUDE.md](templates/CLAUDE.md))
-2. `docs/product.md` erstellen (Vorlage: [templates/product.md](templates/product.md))
+2. `docs/prd.md` erstellen (Vorlage: [templates/prd.md](templates/prd.md))
 3. `docs/decisions.md` erstellen (Vorlage: [templates/decisions.md](templates/decisions.md))
-4. `docs/meetings/` Ordner erstellen
-5. `docs/team/[name]-mission.md` erstellen (Vorlage: [templates/mission.md](templates/mission.md))
-6. `docs/team/modus-operandi.md` — projektspezifische Version dieses Dokuments
-7. Dem Teammitglied erklären: "Das ist dein Dokument. Du aktualisierst es. Claude liest es."
-8. _Optional (ab ~15 Features oder mehreren Feature-Quellen):_ `docs/backlog.md` erstellen (Vorlage: [templates/backlog.md](templates/backlog.md))
+4. `docs/INBOX.md` erstellen (Vorlage: [templates/inbox.md](templates/inbox.md)) — Append-Only-Briefkasten für parallele Doc-Edits
+5. `docs/meetings/` Ordner erstellen
+6. `docs/team/[name]-mission.md` erstellen (Vorlage: [templates/mission.md](templates/mission.md))
+7. `docs/team/modus-operandi.md` — projektspezifische Version dieses Dokuments
+8. Dem Teammitglied erklären: "Das ist dein Dokument. Du aktualisierst es. Claude liest es."
+9. _Optional (ab ~15 Features oder mehreren Feature-Quellen):_ `docs/backlog.md` erstellen (Vorlage: [templates/backlog.md](templates/backlog.md))
 
 **Zeitaufwand pro Tag für Teammitglieder:** ~5-10 Minuten (Status aktualisieren, [x] setzen, Blocker notieren)
 **Zeitaufwand pro Woche für Projektleitung:** ~15 Minuten (Meetings + Status scannen)

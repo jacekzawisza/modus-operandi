@@ -9,7 +9,8 @@ _Hier werden offene Punkte aus Meetings gesammelt, die noch in die Projekt-Docs 
 ## JJJJ-MM-TT — [Meeting-Titel]
 - [ ] decisions.md: [Entscheidung ergänzen]
 - [ ] [name]-aufgaben.md: [Neue Aufgabe]
-- [ ] product.md: [Anforderung dokumentieren]
+- [ ] backlog.md: [Neues Feature mit nächster freier ID]
+- [ ] prd.md: [Scope-Änderung dokumentieren]
 → Quelle: docs/meetings/JJJJ-MM-TT-thema.md
 
 -->
