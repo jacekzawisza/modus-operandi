@@ -256,6 +256,154 @@ Nach Meeting-Destillation fallen Erkenntnisse an, die in andere Docs gehören (n
 
 **Aus dem Vibe Coding Guide:** Vor der Umsetzung das PRD von der KI challengen lassen (2-3 Runden). Die KI deckt Lücken auf.
 
+### 4b. backlog.md — Feature-Registry mit stabilen IDs (pro Projekt, optional)
+
+**Was:** Zentrale Feature-Liste mit **stabilen IDs**. Jedes Feature — Idee aus Meeting, validierte Hypothese, in Arbeit, fertig oder verworfen — hat genau eine ID. Nummer wird **nie** wiederverwendet.
+
+**Wo:** `docs/backlog.md`
+
+**Wer aktualisiert:** Projektleitung (oder wer ein Meeting destilliert)
+
+**Wann einsetzen:**
+- Sobald Features aus mehreren Quellen kommen (mehrere Kundenmeetings, eigene Ideen, Team-Input)
+- Spätestens ab ~15 Features oder nach 3-4 Meetings mit Feature-Wünschen
+- Wenn du merkst, dass F-Nummern in Meeting-Notes nicht zu den F-Nummern in Commits passen
+
+> Vorlage: [templates/backlog.md](templates/backlog.md)
+
+**Warum stabile IDs?** Wenn in Meeting-Note A steht "F1 = Multi-Empfänger" und zwei Wochen später in Meeting-Note B jemand "F1 = Tourenansicht" schreibt, driften die Nummern. Commits referenzieren eine Version, Docs die andere. Beim nächsten Audit weiß niemand mehr, was gemeint war. Stabile IDs lösen das.
+
+**Format:**
+
+```markdown
+# backlog.md — [Projektname]
+
+_Stabile Feature-IDs. Nicht umnummerieren. Killed-IDs bleiben killed._
+
+## Konvention
+- ID-Schema: `[PREFIX]-NNN` (z.B. `FW-001`)
+- Prefix = Projektkürzel, max. 4 Zeichen
+- Nummerierung fortlaufend, NIE wiederverwendet (wie GitHub-Issues)
+- In Meeting-Notizen, Commits, PRs immer per ID referenzieren
+
+## Status
+- `hypo` — Hypothese aus Meeting/Idee, noch nicht validiert
+- `validated` — mit Kunde/Nutzer bestätigt, aber noch kein Code
+- `in-progress` — in Arbeit
+- `done` — implementiert
+- `killed` — verworfen (mit kurzem Grund)
+
+## Features
+
+| ID | Name | Status | Quelle | Notiz |
+|----|------|--------|--------|-------|
+| FW-001 | Multi-Empfänger-Kommando | hypo | meetings/2026-04-14-X.md | Mit Becker 22.04. validieren |
+| FW-002 | Wiegeschein-Verknüpfung | done | meetings/2026-04-14-X.md | Commit e2d5e86 |
+| FW-003 | Kunden-Specific Aliase | killed | meetings/2026-04-14-X.md | Zu teuer für Phase 1 |
+```
+
+**Verhältnis zu product.md:**
+- **product.md** bleibt strategisches PRD: Phasen, Meilensteine, Erfolgskriterien, Risiken.
+- **backlog.md** ist die flache operative Feature-Liste mit IDs und aktuellem Status.
+- In product.md-Tabellen referenzierst du per ID: "Phase 1 umfasst FW-002, FW-003, FW-004".
+- Kein Widerspruch zur Regel "PRD + Roadmap in einem Dokument" — die Roadmap (WANN) bleibt in product.md. Der Backlog zählt nur die Items und ihren Status, nicht die Zeitachse.
+
+**Verhältnis zu Meeting-Notes:**
+- Feature-Wunsch im Meeting → direkt nächste freie ID vergeben, in backlog.md eintragen, in Meeting-Note mit `[FW-NNN]` referenzieren.
+- Nie mehr "F1/F2/F3" lokal im Meeting-Dokument durchnummerieren — das erzeugt genau den Drift.
+
+**Verhältnis zu Commits:**
+- Commit-Message: `feat: FW-007 Gelesen-Status im Dashboard`
+- Damit ist per `git log --grep="FW-007"` jederzeit nachvollziehbar, wann eine ID implementiert wurde.
+
+**Verhältnis zu decisions.md:**
+- Wenn ein Feature verworfen wird (`killed`), gehört die Begründung ins decisions.md (Kontext, Alternativen, Konsequenzen). Der Backlog-Eintrag referenziert die Entscheidung per Datum.
+
+**Kleinprojekt-Ausnahme:** Für ein Projekt mit < 10 Features in einer Phase reicht product.md allein (die Features-Tabelle dort macht den Job). Backlog ab ca. 15+ Features sinnvoll — oder spätestens, wenn das "welche F-Nummer war was?"-Problem auftritt.
+
+### 4c. results.md — Lern-Schicht pro Feature (pro Projekt)
+
+**Was:** Outcome-Notiz pro abgeschlossenem Feature. Schließt den Closed Loop zwischen „was war geplant" (Plan-File / Konzept) und „was funktioniert in echt" (Realität bei Nutzern).
+
+**Wo:** `docs/results/[ID].md`, pro Feature ein File. Z.B. `docs/results/FW-040.md`.
+
+**Wer schreibt:** Wer das Feature gebaut hat (oder die Projektleitung).
+
+**Wann entsteht ein Eintrag:**
+- **Nicht bei jedem Bugfix.** Trivialitäten brauchen kein Result.
+- **Pflicht** bei jedem Feature, das einen echten Nutzer-Workflow ändert.
+- **Pflicht** bei jedem Experiment, dessen Outcome nicht vorher feststand (A/B, neue Sales-Mail, neuer Pitch).
+- **Frühestens 24h nach Go-Live** (sonst keine Real-User-Daten).
+- **Spätestens 7 Tage nach Go-Live** (sonst vergessen).
+
+> Vorlage: [templates/results.md](templates/results.md)
+
+**Warum diese Schicht?**
+
+`backlog.md` sagt **was geplant ist**, `decisions.md` sagt **warum gebaut wurde**, `product.md` sagt **wohin es geht**. Was bislang fehlt: **was nach dem Live-Gehen tatsächlich passiert ist.**
+
+Ohne Lern-Schicht:
+- Du baust, shippst, vergisst — beim nächsten Feature wiederholst du dieselben Annahmen
+- Patterns über mehrere Features bleiben unsichtbar (z.B. „die letzten 4 UI-Features wurden alle weniger genutzt als erwartet — gemeinsame Ursache?")
+- AI-Co-Piloten können nicht aus deinen Outcomes lernen, weil sie nirgends stehen
+
+Inspiriert durch Dave Blundins `results.md`-Disziplin pro Training-Run (Substack DB2-Tour Part 4). Übertragen auf jedes Feature, das ein echter Nutzer berührt.
+
+**Format (Kurzversion — Details in der Vorlage):**
+
+```markdown
+# Result — [ID] [Feature-Name]
+
+**Live seit:** [Datum]
+**Pilot-Nutzer:** [wer hat real getestet]
+**Status:** [holding / iterating / killed / shipped-as-is]
+
+## Hypothese (aus dem Plan)
+[Was sollte das Feature lösen?]
+
+## Was tatsächlich gebaut wurde
+[Abweichungen vom Plan]
+
+## Outcome — harte Daten
+- Nutzungs-Frequenz, Adoption, Performance-Metriken
+- Tracking-Events (falls instrumentiert)
+
+## Outcome — weicher Feedback
+- Verbatim-Zitate des Nutzers
+- Stimmung, beobachtete Nicht-Aktionen
+
+## Überraschungen
+[Was war anders als gedacht?]
+
+## Lernen → nächste Iteration
+- Bestätigte / widerlegte Annahmen
+- Neue Feature-Ideen, Kill-Kandidaten
+```
+
+**Integration in den Workflow:**
+
+- **Beim Commit eines Features (`backlog.md`: `in-progress` → `done`):** Stub-Eintrag in `docs/results/[ID].md` mit „Live seit", Plan-File-Verweis und leeren Outcome-Feldern. Reminder für dich selbst.
+- **Innerhalb 7 Tage nach Go-Live:** Stub vervollständigen. 80% reicht — Hauptsache geschrieben.
+- **Monatlich:** alle Results der letzten 4 Wochen kurz überfliegen. Pattern-Hypothese ableiten. Wenn ja: Eintrag in `decisions.md` mit der Erkenntnis + Konsequenz.
+- **Vor jedem neuen Plan-File:** suchen ob es ein verwandtes Result gibt, dessen Outcome ich kennen sollte, bevor ich das nächste Feature plane.
+
+**Optional: Automatisierung der Result-Disziplin**
+
+In reiferen Projekten kann ein Skript helfen, Result-Lücken zu erkennen:
+- `scripts/check-pending-results.ts` liest `git log --grep='^feat:'` der letzten 14 Tage, prüft welche IDs ein `docs/results/`-File haben, listet überfällige (>=7 Tage seit Commit).
+- `scripts/generate-result-stub.ts FW-NNN` baut einen Vor-Befüllungs-Stub mit Auto-Felder aus User-Tracking-Daten (falls vorhanden).
+- Eine Datei `docs/pending-results.md` als lebende Liste aller offenen Outcomes.
+
+Wann diese Automation sinnvoll ist: ab ~5 ungeschriebenen Results in einem Monat. Vorher reicht die Disziplin von Hand.
+
+**Was results.md NICHT ist:**
+- Nicht ein Changelog (eigene Form, eigene Datei).
+- Nicht ein Bug-Tracker (Bugs sind eigene IDs im Backlog).
+- Nicht ein Vertriebs-Tagebuch (Lead-Status gehört in CRM / `leads.md`).
+- Nicht ein Sales-Pitch für Investoren (eigene Sprache, eigene Datei).
+
+`results.md`-Einträge sind **kurze, ehrliche Outcome-Notizen für dich selbst und für zukünftige AI-Co-Piloten**, die sie als Kontext für neue Feature-Vorschläge nutzen.
+
 ### 5. decisions.md (pro Projekt)
 
 **Was:** Chronologisches Log aller Architektur- und Produktentscheidungen auf Projekt-Level.
@@ -336,6 +484,7 @@ dein-projekt/
 ├── docs/
 │   ├── INBOX.md                     # Offene Änderungen aus Meetings
 │   ├── product.md                   # PRD — Was und Warum
+│   ├── backlog.md                   # Feature-Registry mit stabilen IDs (optional, ab ~15 Features)
 │   ├── architecture.md              # Stack, Datenmodell, Seitenstruktur
 │   ├── decisions.md                 # Architektur-Entscheidungen (chronologisch)
 │   ├── modus-operandi.md            # Dieses Dokument (projektspezifische Version)
@@ -358,6 +507,7 @@ dein-projekt/
 ├── docs/
 │   ├── INBOX.md                     # Offene Änderungen aus Meetings
 │   ├── product.md                   # PRD — Was und Warum
+│   ├── backlog.md                   # Feature-Registry mit stabilen IDs (optional, ab ~15 Features)
 │   ├── architecture.md              # Stack, Datenmodell, Seitenstruktur
 │   ├── decisions.md                 # Architektur-Entscheidungen (chronologisch)
 │   │
@@ -388,14 +538,16 @@ dein-projekt/
 ```
 # Solo-Projekt:
 CLAUDE.md (Einstieg)
-   ├── docs/product.md (WAS bauen wir?)
+   ├── docs/product.md (WAS bauen wir? Strategisch)
+   ├── docs/backlog.md (WELCHE Features? Stabile IDs, Status)
    ├── docs/architecture.md (WIE bauen wir es?)
    ├── docs/modus-operandi.md (WIE arbeiten wir?)
    └── docs/meetings/*.md (WAS wurde besprochen?)
 
 # Team-Projekt:
 CLAUDE.md (Einstieg)
-   ├── docs/product.md (WAS bauen wir?)
+   ├── docs/product.md (WAS bauen wir? Strategisch)
+   ├── docs/backlog.md (WELCHE Features? Stabile IDs, Status)
    ├── docs/architecture.md (WIE bauen wir es?)
    ├── docs/team/[name]-mission.md (WER macht WAS gerade?)
    ├── docs/team/modus-operandi.md (WIE arbeiten wir?)
@@ -495,11 +647,16 @@ Bitte lies zuerst CLAUDE.md für Projektkonventionen, dann docs/INBOX.md für of
 Bitte Session abschließen:
 1. Aktualisiere alle relevanten Dateien in docs/ mit den Änderungen dieser Session
    (z.B. architecture.md, decisions.md, product.md, Konzepte)
-2. Aktualisiere Aufgaben- und Mission-Dokumente (erledigte Tasks [x], neue Tasks)
-3. Prüfe docs/INBOX.md — wenn offene Punkte existieren, arbeite sie in die
+2. Wenn docs/backlog.md existiert: Status aller berührten Feature-IDs aktualisieren
+   (hypo → validated → in-progress → done / killed). Neu entstandene Feature-Ideen
+   mit nächster freier ID eintragen.
+3. Aktualisiere Aufgaben- und Mission-Dokumente (erledigte Tasks [x], neue Tasks)
+4. Prüfe docs/INBOX.md — wenn offene Punkte existieren, arbeite sie in die
    jeweiligen Docs ein und lösche die erledigten Einträge aus INBOX.md
-4. Aktualisiere CLAUDE.md, falls sich Konventionen oder die Projektstruktur geändert haben
-5. Gib mir eine Commit-Message (Conventional Commits, Deutsch) — aber committe nicht selbst.
+5. Aktualisiere CLAUDE.md, falls sich Konventionen oder die Projektstruktur geändert haben
+6. Gib mir eine Commit-Message (Conventional Commits, Deutsch) — falls backlog.md
+   existiert, die Feature-ID im Message einbinden (z.B. "feat: FW-007 ..."). Aber
+   committe nicht selbst.
 ```
 
 **Einrichtung:** Raycast → Extensions → Snippets → Create Snippet → Name + Keyword + Text einfügen. `{cursor}` markiert die Cursor-Position nach dem Einfügen.
@@ -639,6 +796,7 @@ Ein Projekt-Bot im Team-Kanal kann als **Kommunikations-Hub** dienen — kein zw
 3. `docs/decisions.md` erstellen (Vorlage: [templates/decisions.md](templates/decisions.md))
 4. `docs/meetings/` Ordner erstellen (für Kundenmeetings)
 5. `docs/modus-operandi.md` — projektspezifische Version dieses Dokuments
+6. _Optional (ab ~15 Features oder mehreren Feature-Quellen):_ `docs/backlog.md` erstellen (Vorlage: [templates/backlog.md](templates/backlog.md))
 
 ### Team-Projekt
 
@@ -649,6 +807,7 @@ Ein Projekt-Bot im Team-Kanal kann als **Kommunikations-Hub** dienen — kein zw
 5. `docs/team/[name]-mission.md` erstellen (Vorlage: [templates/mission.md](templates/mission.md))
 6. `docs/team/modus-operandi.md` — projektspezifische Version dieses Dokuments
 7. Dem Teammitglied erklären: "Das ist dein Dokument. Du aktualisierst es. Claude liest es."
+8. _Optional (ab ~15 Features oder mehreren Feature-Quellen):_ `docs/backlog.md` erstellen (Vorlage: [templates/backlog.md](templates/backlog.md))
 
 **Zeitaufwand pro Tag für Teammitglieder:** ~5-10 Minuten (Status aktualisieren, [x] setzen, Blocker notieren)
 **Zeitaufwand pro Woche für Projektleitung:** ~15 Minuten (Meetings + Status scannen)
