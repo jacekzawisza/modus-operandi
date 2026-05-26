@@ -1,0 +1,68 @@
+name: Build PDF and deploy to prof-z-website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.md'
+      - 'VERSION'
+      - 'build/**'
+      - '.github/workflows/build-pdf.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout modus-operandi
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Pandoc + xelatex + fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pandoc \
+            texlive-xetex \
+            texlive-fonts-recommended \
+            texlive-lang-german \
+            fonts-dejavu
+
+      - name: Build PDF
+        run: bash build/build-pdf.sh
+
+      - name: Show PDF metadata
+        run: |
+          ls -lh dist/modus-operandi.pdf
+          file dist/modus-operandi.pdf
+
+      - name: Checkout prof-z-website
+        uses: actions/checkout@v4
+        with:
+          repository: jacekzawisza/prof-z-website
+          path: prof-z-website
+          token: ${{ secrets.PROF_Z_WEBSITE_PAT }}
+
+      - name: Copy PDF into website repo
+        run: |
+          cp dist/modus-operandi.pdf prof-z-website/modus-operandi.pdf
+
+      - name: Commit and push to prof-z-website
+        working-directory: prof-z-website
+        run: |
+          git config user.name "modus-operandi-bot"
+          git config user.email "bot@prof-z.com"
+          git add modus-operandi.pdf
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen am PDF — kein Commit nötig."
+          else
+            VERSION=$(cat ../VERSION)
+            COMMIT_SHORT=$(git -C .. rev-parse --short HEAD)
+            git commit -m "chore: PDF-Update aus modus-operandi (v${VERSION}, ${COMMIT_SHORT})"
+            git push
+            echo "✓ modus-operandi.pdf in prof-z-website gepushed"
+          fi
